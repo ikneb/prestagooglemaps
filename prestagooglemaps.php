@@ -12,6 +12,7 @@ class PrestaGoogleMaps extends Module
 
     public function __construct()
     {
+        include_once(_PS_MODULE_DIR_ . 'prestagooglemaps/classes/MapsAreas.php');
 
         if (!defined('_PS_MODULE_DIR_')) {
             define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR);
