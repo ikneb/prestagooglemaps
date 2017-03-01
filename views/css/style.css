@@ -1,0 +1,19 @@
+.maps-template #map{
+    height: 400px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.maps-template .nav-tab-content {
+    background-color: #fff;
+    border: 1px solid #ddd;
+
+}
+
+.no-display{
+    display: none !important;
+}
+
+.marker__title, .polylines__title{
+    text-align: center;
+}

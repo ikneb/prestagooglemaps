@@ -44,22 +44,28 @@ class AdminPrestaGoogleMapsController extends ModuleAdminController
 
     public function renderForm()
     {
-        /*$id_provider = Tools::getValue('id_providers');
-        $provider = $id_provider ? Providers::getCurrentProvider($id_provider) : false;
+        $id_map = Tools::getValue('id_maps_areas');
+        $polylines = '';
+        $markers = '';
+
 
         $this->context->smarty->assign(
             array(
-                'id_providers' => $provider ? $provider['id_providers'] : '',
-                'name' => $provider ? $provider['name'] : '',
-                'description' => $provider ? $provider['description'] : '',
-                'email' => $provider ? $provider['email'] : '',
-                'token' => $this->token,
-                'product_id' => (int)Tools::getValue('id_product')
+                'id_map' => $id_map,
+                'polylines' => $polylines,
+                'markers' => $markers,
             )
-        );*/
+        );
         parent::renderForm();
         return $this->context->smarty->fetch(
             _PS_MODULE_DIR_ . 'prestagooglemaps/views/templates/admin/maps_template.tpl'
         );
     }
+    public function setMedia()
+    {
+        parent::setMedia();
+        $this->context->controller->addCSS(_PS_MODULE_DIR_ . 'prestagooglemaps/views/css/style.css', 'all');
+        $this->context->controller->addJS(_PS_MODULE_DIR_ . 'prestagooglemaps/views/js/module.js');
+    }
+
 }

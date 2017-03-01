@@ -14,3 +14,9 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "maps_areas` (
 `name` varchar(100) NOT NULL,
 PRIMARY KEY (`id_maps_areas`)
 )";
+
+$sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "markers` (
+`id_maps_areas` int(11) NOT NULL AUTO_INCREMENT,
+`name` varchar(100) NOT NULL,
+PRIMARY KEY (`id_maps_areas`)
+)";
