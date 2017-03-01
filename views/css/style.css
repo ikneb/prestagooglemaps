@@ -7,7 +7,7 @@
 .maps-template .nav-tab-content {
     background-color: #fff;
     border: 1px solid #ddd;
-
+    padding-top: 20px;
 }
 
 .no-display{
@@ -16,4 +16,8 @@
 
 .marker__title, .polylines__title{
     text-align: center;
+}
+
+.maps-template .polylines__add {
+    margin-bottom: 20px;
 }
