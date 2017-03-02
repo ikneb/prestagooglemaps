@@ -18,39 +18,6 @@ function initMap() {
     addListenerForAddMarkers();
 }
 
-function addListenerForAddMarkers() {
-    google.maps.event.addListener(map, 'click', function (event) {
-        $('.marker__title').remove();
-        var newLi = document.createElement('div');
-        id_marker = addMarker(event.latLng, map) - 1;//asdasdasdasdasdasssssssssssssssssssssssssssssssssssssssssssssssssssssss_ID
-        newLi.innerHTML =
-            '<div class="panel" data-id="'+id_marker+'"><h3></i>Marker</h3>' +
-            '<div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>' +
-            '<input type="text" name="name" class="form-control marker__name"></div>' +
-            '<div class="form-group"><label class="col-md-4 control-label"><span>Icon</span></label>' +
-            '<select name="method" class="marker__method">'+
-            '<option value="0">Select</option>'+
-            '<option value="1">Download</option>'+
-            '<option value="2">Default</option>'+
-            '</select></div>' +
-            '<div class="form-group action-wrap"><label class="col-md-4 control-label"><span>Action</span></label>' +
-            '<select name="action" class="marker__action">'+
-            '<option value="0">Select</option>'+
-            '<option value="1">Title hover</option>'+
-            '<option value="2">Info window(click)</option>'+
-            '<option value="3">Animate effect(click)</option>'+
-            '<option value="4">Link(click)</option>'+
-            '<option value="5">Custom script(click)</option>'+
-            '</select></div>' +
-            '<div class="panel-footer"><button type="submit" class="btn btn-default pull-right"' +
-            'name=""><i class="process-icon-save marker__save"></i> Save</button>' +
-            '<a href="" class="btn btn-default"><i class="process-icon-cancel marker__remove-panel">' +
-            '</i></a>' +
-            '</div></div>';
-        markers__list.appendChild(newLi);
-    });
-}
-
 function addMarker(location, map) {
     var marker = new google.maps.Marker({
         position: location,
@@ -78,6 +45,52 @@ function getPathVariableCode(line) {
     return codeStr;
 };
 
+
+function addListenerForAddMarkers() {
+    google.maps.event.addListener(map, 'click', function (event) {
+        $('.marker__title').remove();
+        var newLi = document.createElement('div');
+        id_marker = addMarker(event.latLng, map) - 1;//asdasdasdasdasdasssssssssssssssssssssssssssssssssssssssssssssssssssssss_ID
+        newLi.innerHTML =
+            '<div class="panel" data-id="' + id_marker + '"><h3></i>Marker</h3>' +
+            '<div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>' +
+            '<input type="text" name="name" class="form-control marker__name"></div>' +
+            '<div class="form-group method-wrapp"><label class="col-md-4 control-label"><span>Icon</span></label>' +
+            '<select name="method" class="marker__method">' +
+            '<option value="0">Default</option>' +
+            '<option value="1">Download</option>' +
+            '<option value="2">Icons</option>' +
+            '</select></div>' +
+            '<div class="form-group no-display method"><label class="col-md-4 control-label"><span></span></label>' +
+            '<select name="icon" class="marker__default-icon">' +
+            '<option value="0">Default</option>' +
+            '</select></div>'+
+            '<div class="form-group no-display download" id="img">' +
+            '<div class="download-form">' +
+            '<button type="submit" class="upload_image_button button">Upload</button>' +
+            '<button type="submit" class="remove_image_button button">&times;</button>' +
+            '<input id="my_file" class="custom-file-input" type="file" name="my_file"></div>'+
+            '<img class="img"  src="/modules/prestagooglemaps/views/image/default.png" width="116px" height="116px"/>' +
+            '</div>' +
+            '<div class="form-group action-wrap"><label class="col-md-4 control-label"><span>Action</span></label>' +
+            '<select name="action" class="marker__action">' +
+            '<option value="0">Select</option>' +
+            '<option value="1">Title hover</option>' +
+            '<option value="2">Info window(click)</option>' +
+            '<option value="3">Animate effect(click)</option>' +
+            '<option value="4">Link(click)</option>' +
+            '<option value="5">Custom script(click)</option>' +
+            '</select></div>' +
+            '<div class="panel-footer"><button type="submit" class="btn btn-default pull-right"' +
+            'name=""><i class="process-icon-save marker__save"></i> Save</button>' +
+            '<a href="" class="btn btn-default"><i class="process-icon-cancel marker__remove-panel">' +
+            '</i></a>' +
+            '</div></div>';
+        markers__list.appendChild(newLi);
+    });
+}
+
+
 $(document).ready(function () {
     $('body').on('click', '#maps-template .nav-tabs a', function (e) {
         e.preventDefault();
@@ -99,6 +112,83 @@ $(document).ready(function () {
         }
     });
 
+
+    /**
+     * Select method icon change
+     */
+    $('body').on('click', '.marker__method', function () {
+        var _this = $(this);
+        var val = _this.val();
+        if (val == 1) {
+            _this.closest('.panel').find('.download').removeClass('no-display');
+            _this.closest('.panel').find('.method').addClass('no-display');
+            /*var el = document.getElementById('my_file');
+            el.addEventListener('change', function(evt){
+                var files = evt.target.files;
+
+                for (var i = 0, f; f = files[i]; i++) {
+                    if (!f.type.match('image.*')) {
+                        continue;
+                    }
+                    var reader = new FileReader();
+
+                    reader.onload = (function(theFile) {
+                        return function(e) {
+                            var span = document.createElement('span');
+                            $('.img').remove();
+                            span.innerHTML = ['<img class="img" src="', e.target.result,
+                                '" title="', escape(theFile.name), '" width="116px" height="116px"/>'].join('');
+                            document.getElementById('img').appendChild(span);
+                            /!*var id = evt.closest('.panel').attr('data-id');
+                             console.log(evt);*!/
+
+                            /!*var icon = {
+                             url: e.target.result,
+                             scaledSize: new google.maps.Size(50, 50)
+                             };
+                             markers[id].setIcon(icon);*!/
+                        };
+                    })(f);
+
+                    reader.readAsDataURL(f);
+                }
+            }, false);*/
+        } else if(val == 2) {
+            _this.closest('.panel').find('.method').removeClass('no-display');
+            _this.closest('.panel').find('.download').addClass('no-display');
+        }
+    });
+
+    $('body').on('change', '.custom-file-input', function(evt){
+        var _this = $(this);
+        var id = _this.closest('.panel').attr('data-id');
+        var files = evt.target.files;
+        for (var i = 0, f; f = files[i]; i++) {
+            if (!f.type.match('image.*')) {
+                continue;
+            }
+            var reader = new FileReader();
+
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    var span = document.createElement('span');
+                    _this.closest('.panel').find('.img').remove();
+                    span.innerHTML = ['<img class="img" src="', e.target.result,
+                        '" title="', escape(theFile.name), '" width="116px" height="116px"/>'].join('');
+                    _this.closest('.panel').find('#img').append(span);
+                    var icon = {
+                     url: e.target.result,
+                     scaledSize: new google.maps.Size(35, 35)
+                     };
+                     markers[id].setIcon(icon);
+                };
+            })(f);
+
+            reader.readAsDataURL(f);
+        }
+    })
+
+
     /**
      * Select action on the click for marker
      */
@@ -114,7 +204,7 @@ $(document).ready(function () {
                     _this.closest('.panel').find('.action-wrap').after(
                         '<div class="form-group"><label class="col-md-4 control-label"><span>Title</span></label>' +
                         '<textarea  name="title" class="marker__title"></textarea>' +
-                        '<div class="marker__remove col-md-4"><a href="title" title="Delete" class="delete">'+
+                        '<div class="marker__remove col-md-4"><a href="title" title="Delete" class="delete">' +
                         '<i class="icon-trash"></i> Delete</a></div></div>'
                     );
                 }
@@ -124,7 +214,7 @@ $(document).ready(function () {
                     _this.closest('.panel').find('.action-wrap').after(
                         '<div class="form-group"><label class="col-md-4 control-label"><span>Info Window</span></label>' +
                         '<textarea  name="window" class=" isset-click marker__window"></textarea>' +
-                        '<div class="marker__remove col-md-4"><a title="Delete" class="delete">'+
+                        '<div class="marker__remove col-md-4"><a title="Delete" class="delete">' +
                         '<i class="icon-trash"></i> Delete</a></div></div>'
                     );
                 }
@@ -133,11 +223,11 @@ $(document).ready(function () {
                 if (!_this.closest('.panel').find('.isset-click').hasClass('isset-click')) {
                     _this.closest('.panel').find('.action-wrap').after(
                         '<div class="form-group"><label class="col-md-4 control-label"><span>Animation</span></label>' +
-                        '<select name="action" class="marker__animation isset-click">'+
-                        '<option value="0">Select animation effect</option>'+
+                        '<select name="action" class="marker__animation isset-click">' +
+                        '<option value="0">Select animation effect</option>' +
                         '<option value="BOUNCE">BOUNCE</option>' +
                         '<option value="DROP">DROP</option>' +
-                        '</select><div class="marker__remove col-md-4"><a title="Delete" class="delete">'+
+                        '</select><div class="marker__remove col-md-4"><a title="Delete" class="delete">' +
                         '<i class="icon-trash"></i> Delete</a></div></div>'
                     );
                 }
@@ -146,8 +236,8 @@ $(document).ready(function () {
                 if (!_this.closest('.panel').find('.isset-click').hasClass('isset-click')) {
                     _this.closest('.panel').find('.action-wrap').after(
                         '<div class="form-group"><label class="col-md-4 control-label"><span>Redirect link</span></label>' +
-                        '<input type="text" name="link" class="form-control marker__link isset-click">'+
-                        '<div class="marker__remove col-md-4"><a href="link" title="Delete" class="delete">'+
+                        '<input type="text" name="link" class="form-control marker__link isset-click">' +
+                        '<div class="marker__remove col-md-4"><a href="link" title="Delete" class="delete">' +
                         '<i class="icon-trash"></i> Delete</a></div></div>'
                     );
                 }
@@ -157,7 +247,7 @@ $(document).ready(function () {
                     _this.closest('.panel').find('.action-wrap').after(
                         '<div class="form-group"><label class="col-md-4 control-label"><span>Script</span></label>' +
                         '<textarea  name="title" class="marker__script"></textarea>' +
-                        '<div class="marker__remove col-md-4"><a  title="Delete" class="delete">'+
+                        '<div class="marker__remove col-md-4"><a  title="Delete" class="delete">' +
                         '<i class="icon-trash"></i> Delete</a></div></div>'
                     );
                 }
@@ -169,7 +259,7 @@ $(document).ready(function () {
     /**
      * Add action when hover and render title marker
      */
-    $('body').on('keyup', '.marker__title', function(e){
+    $('body').on('keyup', '.marker__title', function (e) {
         e.preventDefault();
         var id = $(this).closest('.panel').attr('data-id');
         var value = $(this).val();
@@ -179,7 +269,7 @@ $(document).ready(function () {
     /**
      * Add listener whit window on click marker
      */
-    $('body').on('keyup', '.marker__window', function(e){
+    $('body').on('keyup', '.marker__window', function (e) {
         e.preventDefault();
         var id = $(this).closest('.panel').attr('data-id');
         var value = $(this).val();
@@ -210,7 +300,7 @@ $(document).ready(function () {
             case 'BOUNCE':
                 markers[id].addListener('click', function () {
                     markers[id].setAnimation(google.maps.Animation.BOUNCE);
-                    setTimeout(function(){
+                    setTimeout(function () {
                         markers[id].setAnimation();
                     }, 2100);
                 });
@@ -279,25 +369,23 @@ $(document).ready(function () {
     jQuery(document).on('click', '.marker__remove-panel', function (e) {
         e.preventDefault();
         var id = $(this).closest('.panel').attr('data-id');
-       /* var id_map_post = jQuery(this).closest('.marker__wrapper').attr('data-postid');*/
-       $(this).closest('.panel').remove();
+        /* var id_map_post = jQuery(this).closest('.marker__wrapper').attr('data-postid');*/
+        $(this).closest('.panel').remove();
         markers[id].setMap(null);
         /*jQuery.ajax({
-            type: 'POST',
-            url: '/wp-content/plugins/googlmapsareas/ajax.php',
-            data: {
-                action: 'remove_marker',
-                id_marker: id,
-                id_map_post: id_map_post,
-            },
-            success: function (data) {
-                process(data);
-            }
-        });*/
+         type: 'POST',
+         url: '/wp-content/plugins/googlmapsareas/ajax.php',
+         data: {
+         action: 'remove_marker',
+         id_marker: id,
+         id_map_post: id_map_post,
+         },
+         success: function (data) {
+         process(data);
+         }
+         });*/
 
     });
-
-
 
 
     $('body').on('click', '.polylines__add', function (e) {
@@ -310,12 +398,12 @@ $(document).ready(function () {
             '<div class="form-group"><label class="col-md-4 control-label"><span>Thickness of the line</span></label>' +
             '<input type="number" name="thick" class="form-control polyline__thick" value="2"></div>' +
             '<div class="form-group"><label class="col-md-4 control-label"><span>Color</span></label>' +
-            '<select name="select" class="polyline__color">'+
-            '<option value="#000000">Black</option>'+
-            '<option value="#FF0000">Red</option>'+
-            '<option value="#0000F0">Blue</option>'+
-            '<option value="#008000">Green</option>'+
-            '<option value="#808080">Gray</option>'+
+            '<select name="select" class="polyline__color">' +
+            '<option value="#000000">Black</option>' +
+            '<option value="#FF0000">Red</option>' +
+            '<option value="#0000F0">Blue</option>' +
+            '<option value="#008000">Green</option>' +
+            '<option value="#808080">Gray</option>' +
             '</select></div>' +
             '<div class="panel-footer"><button type="submit" class="btn btn-default pull-right polyline__save"' +
             'name=""><i class="process-icon-save"></i> Save</button>' +
@@ -360,13 +448,26 @@ $(document).ready(function () {
         jQuery(this).closest('.panel').remove();
     });
 
-    $('body').on('keyup', '.polyline__thick', function(){
+    $('body').on('keyup', '.polyline__thick', function () {
         var thick = $(this).val();
         poly.setOptions({strokeWeight: thick});
     });
 
-    $('body').on('click', '.polyline__color', function(){
+    $('body').on('click', '.polyline__color', function () {
         var color = $(this).val();
         poly.setOptions({strokeColor: color});
     });
+
+    $('body').on('click', '.remove_image_button', function(e){
+        e.preventDefault();
+        var button = $(this);
+        var id = button.closest('.panel').attr('data-id');
+        button.closest('.panel').find('.img').attr('src', '/modules/prestagooglemaps/views/image/default.png');
+        markers[id].setIcon();
+    });
 });
+
+
+
+
+
