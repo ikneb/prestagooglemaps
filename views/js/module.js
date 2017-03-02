@@ -52,7 +52,7 @@ function addListenerForAddMarkers() {
         var newLi = document.createElement('div');
         id_marker = addMarker(event.latLng, map) - 1;//asdasdasdasdasdasssssssssssssssssssssssssssssssssssssssssssssssssssssss_ID
         newLi.innerHTML =
-            '<div class="panel" data-id="' + id_marker + '"><h3></i>Marker</h3>' +
+            '<div class="panel" data-id="' + id_marker + '"><h3>Marker</h3>' +
             '<div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>' +
             '<input type="text" name="name" class="form-control marker__name"></div>' +
             '<div class="form-group method-wrapp"><label class="col-md-4 control-label"><span>Icon</span></label>' +

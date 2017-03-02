@@ -24,7 +24,19 @@
                 <button type="button" class="btn btn-primary polylines__add">Add new polyline</button>
             </div>
             <div id="setting" class="tab col-md-12  no-display">
-                <h1>setting</h1>
+
+                <div class="panel">
+                    <h3>Setting</h3>
+
+                    <div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>
+
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" class="btn btn-default pull-right" name="">
+                            <i class="process-icon-save marker__save"></i> Save
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
