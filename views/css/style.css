@@ -1,4 +1,4 @@
-.maps-template #map{
+.maps-template #map {
     height: 400px;
     width: 100%;
     margin-bottom: 20px;
@@ -10,14 +10,35 @@
     padding-top: 20px;
 }
 
-.no-display{
+.no-display {
     display: none !important;
-}
-
-.marker__title, .polylines__title{
-    text-align: center;
 }
 
 .maps-template .polylines__add {
     margin-bottom: 20px;
+}
+
+.maps-template .panel input,
+.maps-template .panel textarea,
+.maps-template .panel select {
+    width: 30%;
+}
+
+.maps-template .panel label span {
+    float: right;
+}
+
+.maps-template .panel .marker__title,
+.maps-template .panel .marker__animation,
+.maps-template .panel .marker__link,
+.maps-template .panel .marker__script,
+.maps-template .panel .isset-click{
+    display: inline-block;
+}
+
+.maps-template .panel .marker__remove {
+    float: right;
+}
+.marker__remove a {
+    float: left;
 }
