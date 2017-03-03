@@ -45,14 +45,31 @@ function getPathVariableCode(line) {
     return codeStr;
 };
 
+function getMarker(newLi) {
+    jQuery.ajax({
+        type: 'POST',
+        url: '/modules/prestagooglemaps/ajax.php',
+        data: {ajax: 'get_all_markers'},
+        success: function (data) {
+            var all_marker_name = JSON.parse(data);
+            jQuery.each(all_marker_name, function () {
+                jQuery(newLi).find('.marker__default-icon').append('<option value="' + this + '.png">' + this + '</option>');
+            });
+        }
+    });
+}
+
 
 function addListenerForAddMarkers() {
     google.maps.event.addListener(map, 'click', function (event) {
         $('.marker__title').remove();
         var newLi = document.createElement('div');
-        id_marker = addMarker(event.latLng, map) - 1;//asdasdasdasdasdasssssssssssssssssssssssssssssssssssssssssssssssssssssss_ID
-        newLi.innerHTML =
-            '<div class="panel" data-id="' + id_marker + '"><h3>Marker</h3>' +
+            addMarker(event.latLng, map);
+            id_marker = markers.length-1;
+            newLi.innerHTML =
+            '<div class="panel" data-id="' + id_marker + '" data-coord="'+
+            event.latLng.lat().toFixed(3)+','+event.latLng.lng().toFixed(3)+'"><h3>Marker</h3>' +
+            '<form enctype="multipart/form-data" class="upload-img" method="post">' +
             '<div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>' +
             '<input type="text" name="name" class="form-control marker__name"></div>' +
             '<div class="form-group method-wrapp"><label class="col-md-4 control-label"><span>Icon</span></label>' +
@@ -64,12 +81,12 @@ function addListenerForAddMarkers() {
             '<div class="form-group no-display method"><label class="col-md-4 control-label"><span></span></label>' +
             '<select name="icon" class="marker__default-icon">' +
             '<option value="0">Default</option>' +
-            '</select></div>'+
+            '</select></div>' +
             '<div class="form-group no-display download" id="img">' +
             '<div class="download-form">' +
             '<button type="submit" class="upload_image_button button">Upload</button>' +
             '<button type="submit" class="remove_image_button button">&times;</button>' +
-            '<input id="my_file" class="custom-file-input" type="file" name="my_file"></div>'+
+            '<input id="my_file" class="custom-file-input" type="file" name="my_file"></div>' +
             '<img class="img"  src="/modules/prestagooglemaps/views/image/default.png" width="116px" height="116px"/>' +
             '</div>' +
             '<div class="form-group action-wrap"><label class="col-md-4 control-label"><span>Action</span></label>' +
@@ -85,15 +102,79 @@ function addListenerForAddMarkers() {
             'name=""><i class="process-icon-save marker__save"></i> Save</button>' +
             '<a href="" class="btn btn-default"><i class="process-icon-cancel marker__remove-panel">' +
             '</i></a>' +
-            '</div></div>';
+            '</div></form></div>';
         markers__list.appendChild(newLi);
+        getMarker(newLi);
+        $(newLi).find('.panel').attr('data-id', id_marker);
     });
 }
 
 
 $(document).ready(function () {
+
+    /**
+     * Change map name
+     */
+    $('body').on('click', '.update_name', function(e){
+        e.preventDefault();
+        var name = $('.map_name').val();
+        var id_map = $(this).closest('.maps-template').attr('data-id');
+
+        $.ajax({
+            type: 'POST',
+            url: '/modules/prestagooglemaps/ajax.php',
+            data: {
+                ajax: 'update_name',
+                name: name,
+                id_map: id_map
+            },
+            success: function (data) {
+                if(data){
+                    $('.alert-success').removeClass('no-display');
+                    setTimeout(function() {
+                        $('.alert-success').addClass('no-display');
+                    }, 2500);
+                }else{
+                    $('.alert-danger').removeClass('no-display');
+                    setTimeout(function() {
+                        $('.alert-danger').addClass('no-display');
+                    }, 2500);
+                }
+            }
+        });
+    });
+
+    /**
+     * Change map name
+     */
+    $('body').on('keyup', '.map_name', function(e) {
+        e.preventDefault();
+        var name = $(this).val();
+        $(this).closest('#main').find('.page-title').html('Edit: '+name);
+    });
+
+
+    $('body').on('click', '.marker__default-icon', function(e){
+        e.preventDefault();
+        var img = $(this).val();
+        var id = $(this).closest('.panel').attr('data-id');
+
+        if (img == 'default') {
+            markers[id].setIcon();
+        } else {
+            var icon = {
+                url: '/modules/prestagooglemaps/views/image/marker-icon/' + img,
+                scaledSize: new google.maps.Size(50, 50)
+            };
+            markers[id].setIcon(icon);
+        }
+    });
+
     $('body').on('click', '#maps-template .nav-tabs a', function (e) {
         e.preventDefault();
+        if ($(this).closest('li').hasClass('disabled')) {
+            return false;
+        }
         var _this = $(this);
         var link = _this.attr('href');
         $('.tab').addClass('no-display');
@@ -105,7 +186,6 @@ $(document).ready(function () {
             case '#polylines__list':
                 switchBetveenPolyMark();
                 $('.polylines__add').removeClass('no-display');
-
                 break;
             case '#markers__list' :
                 break;
@@ -122,44 +202,13 @@ $(document).ready(function () {
         if (val == 1) {
             _this.closest('.panel').find('.download').removeClass('no-display');
             _this.closest('.panel').find('.method').addClass('no-display');
-            /*var el = document.getElementById('my_file');
-            el.addEventListener('change', function(evt){
-                var files = evt.target.files;
-
-                for (var i = 0, f; f = files[i]; i++) {
-                    if (!f.type.match('image.*')) {
-                        continue;
-                    }
-                    var reader = new FileReader();
-
-                    reader.onload = (function(theFile) {
-                        return function(e) {
-                            var span = document.createElement('span');
-                            $('.img').remove();
-                            span.innerHTML = ['<img class="img" src="', e.target.result,
-                                '" title="', escape(theFile.name), '" width="116px" height="116px"/>'].join('');
-                            document.getElementById('img').appendChild(span);
-                            /!*var id = evt.closest('.panel').attr('data-id');
-                             console.log(evt);*!/
-
-                            /!*var icon = {
-                             url: e.target.result,
-                             scaledSize: new google.maps.Size(50, 50)
-                             };
-                             markers[id].setIcon(icon);*!/
-                        };
-                    })(f);
-
-                    reader.readAsDataURL(f);
-                }
-            }, false);*/
-        } else if(val == 2) {
+        } else if (val == 2) {
             _this.closest('.panel').find('.method').removeClass('no-display');
             _this.closest('.panel').find('.download').addClass('no-display');
         }
     });
 
-    $('body').on('change', '.custom-file-input', function(evt){
+    $('body').on('change', '.custom-file-input', function (evt) {
         var _this = $(this);
         var id = _this.closest('.panel').attr('data-id');
         var files = evt.target.files;
@@ -169,18 +218,18 @@ $(document).ready(function () {
             }
             var reader = new FileReader();
 
-            reader.onload = (function(theFile) {
-                return function(e) {
+            reader.onload = (function (theFile) {
+                return function (e) {
                     var span = document.createElement('span');
                     _this.closest('.panel').find('.img').remove();
                     span.innerHTML = ['<img class="img" src="', e.target.result,
                         '" title="', escape(theFile.name), '" width="116px" height="116px"/>'].join('');
                     _this.closest('.panel').find('#img').append(span);
                     var icon = {
-                     url: e.target.result,
-                     scaledSize: new google.maps.Size(35, 35)
-                     };
-                     markers[id].setIcon(icon);
+                        url: e.target.result,
+                        scaledSize: new google.maps.Size(35, 35)
+                    };
+                    markers[id].setIcon(icon);
                 };
             })(f);
 
@@ -246,7 +295,7 @@ $(document).ready(function () {
                 if (!_this.closest('.panel').find('.isset-click').hasClass('isset-click')) {
                     _this.closest('.panel').find('.action-wrap').after(
                         '<div class="form-group"><label class="col-md-4 control-label"><span>Script</span></label>' +
-                        '<textarea  name="title" class="marker__script"></textarea>' +
+                        '<textarea  name="script" class="marker__script"></textarea>' +
                         '<div class="marker__remove col-md-4"><a  title="Delete" class="delete">' +
                         '<i class="icon-trash"></i> Delete</a></div></div>'
                     );
@@ -343,6 +392,44 @@ $(document).ready(function () {
         });
     });
 
+    /**
+     * Save or update marker
+     */
+    jQuery(document).on('submit', '.upload-img', function (e) {
+        e.preventDefault();
+        var id_map = $(this).closest('.maps-template').attr('data-id');
+        var name = $(this).closest('.panel').find('input[name="name"]').val();
+        var coordinates = $(this).closest('.panel').attr('data-coord');
+        var icon = $(this).closest('.panel').find('.marker__default-icon').val();
+        var method = $(this).closest('.panel').find('.marker__method').val();
+        //var download_icon = $(this).closest('.panel').find('.img').attr('src');
+        var label_text = $(this).closest('.panel').find('textarea[name="title"]').val() ?
+            $(this).closest('.panel').find('textarea[name="title"]').val() : '';
+        var window_text = $(this).closest('.panel').find('textarea[name="window"]').val() ?
+           $(this).closest('.panel').find('textarea[name="window"]').val() : '';
+        var animate =  $(this).closest('.panel').find('.marker__animation').val() ?
+            $(this).closest('.panel').find('.marker__animation').val() : '';
+        var link = $(this).closest('.panel').find('input[name="link"]').val() ?
+            $(this).closest('.panel').find('input[name="link"]').val() : '';
+        var script = $(this).closest('.panel').find('textarea[name="script"]').val() ?
+            $(this).closest('.panel').find('textarea[name="script"]').val() : '';
+
+        var formData = new FormData($(this)[0]);
+        if (method == 2) {
+            icon = 'default';
+            method = 0;
+        }
+        jQuery.ajax({
+            type: 'POST',
+            url: '/modules/prestagooglemaps/ajax.php',
+            data: formData,
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
+
 
     /**
      * Remove action  marker
@@ -369,6 +456,7 @@ $(document).ready(function () {
     jQuery(document).on('click', '.marker__remove-panel', function (e) {
         e.preventDefault();
         var id = $(this).closest('.panel').attr('data-id');
+        console.log(id);
         /* var id_map_post = jQuery(this).closest('.marker__wrapper').attr('data-postid');*/
         $(this).closest('.panel').remove();
         markers[id].setMap(null);
@@ -385,11 +473,13 @@ $(document).ready(function () {
          }
          });*/
 
+
     });
 
 
     $('body').on('click', '.polylines__add', function (e) {
         e.preventDefault();
+        $(this).closest('.maps-template').find('.dis-pol').addClass('disabled');
         var newLi = document.createElement('div');
         newLi.innerHTML =
             '<div class="panel"><h3></i>Marker</h3>' +
@@ -427,14 +517,18 @@ $(document).ready(function () {
             var path = poly.getPath();
             path.push(event.latLng);
             coord_poly = getPathVariableCode(poly);
+            $(newLi).find('.panel').attr('data-coord', coord_poly);
 
         });
+        $(newLi).find('.panel').attr('data-id', polies.length);
+        polies.push(poly);
         $('.polylines__add').addClass('no-display');
 
     });
 
     $('body').on('click', '.polyline__save', function (e) {
         e.preventDefault();
+        $(this).closest('.maps-template').find('.dis-pol').removeClass('disabled');
         switchBetveenPolyMark()
         $('.polylines__add').removeClass('no-display');
 
@@ -442,9 +536,11 @@ $(document).ready(function () {
 
     $('body').on('click', '.polyline__remove', function (e) {
         e.preventDefault();
-        switchBetveenPolyMark()
+        $(this).closest('.maps-template').find('.dis-pol').removeClass('disabled');
+        switchBetveenPolyMark();
+        var id = $(this).closest('.panel').attr('data-id');
         $('.polylines__add').removeClass('no-display');
-        poly.setMap(null);
+        polies[id].setMap(null);
         jQuery(this).closest('.panel').remove();
     });
 
@@ -458,7 +554,7 @@ $(document).ready(function () {
         poly.setOptions({strokeColor: color});
     });
 
-    $('body').on('click', '.remove_image_button', function(e){
+    $('body').on('click', '.remove_image_button', function (e) {
         e.preventDefault();
         var button = $(this);
         var id = button.closest('.panel').attr('data-id');

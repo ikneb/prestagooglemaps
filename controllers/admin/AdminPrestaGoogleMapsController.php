@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2017 WeeTeam
  *
@@ -6,11 +7,11 @@
  * @copyright 2016 WeeTeam
  * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
  */
-
 class AdminPrestaGoogleMapsController extends ModuleAdminController
 {
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->bootstrap = true;
         $this->required_database = true;
         $this->required_fields = array('name');
@@ -44,14 +45,21 @@ class AdminPrestaGoogleMapsController extends ModuleAdminController
 
     public function renderForm()
     {
+        $map = '';
         $id_map = Tools::getValue('id_maps_areas');
+        if (!$id_map) {
+            $map = new MapsAreas();
+            $map->name = 'New Map';
+            $map->add();
+        } else {
+            $map = new MapsAreas($id_map);
+        }
+
         $polylines = '';
         $markers = '';
-
-
         $this->context->smarty->assign(
             array(
-                'id_map' => $id_map,
+                'map' => $map,
                 'polylines' => $polylines,
                 'markers' => $markers,
             )
@@ -61,6 +69,7 @@ class AdminPrestaGoogleMapsController extends ModuleAdminController
             _PS_MODULE_DIR_ . 'prestagooglemaps/views/templates/admin/maps_template.tpl'
         );
     }
+
     public function setMedia()
     {
         parent::setMedia();

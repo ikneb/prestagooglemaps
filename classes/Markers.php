@@ -45,4 +45,18 @@ class Markers extends ObjectModel
         ),
     );
 
+    public static function getAllDefaultIcon(){
+        $all_ikon = scandir(_PS_MODULE_DIR_ . 'prestagooglemaps/views/image/marker-icon');
+        $array = array_flip($all_ikon);
+        unset($array['.']);
+        unset($array['..']);
+        $all_ikon = array_flip($array);
+        $type = array('.png', '.svg', '.jpg', '.icon');
+        for ($i = 2; $i < count($all_ikon) + 2; $i++) {
+            if ($all_ikon[$i]) {
+                $all_ikon[$i] = str_replace($type, '', $all_ikon[$i]);
+            }
+        }
+        return $all_ikon;
+    }
 }

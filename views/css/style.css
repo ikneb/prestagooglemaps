@@ -85,3 +85,11 @@
     position: relative;
     z-index: 999999;
 }
+
+.disabled {
+    pointer-events: none;
+}
+
+.update_name{
+
+}

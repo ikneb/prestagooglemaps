@@ -1,4 +1,22 @@
-<div class="container maps-template" id="maps-template">
+<div class="container maps-template" id="maps-template" data-id="{$map->id}">
+    <div class="row">
+        <div class="alert alert-success no-display">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            Successful update
+        </div>
+        <div class="alert alert-danger no-display">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            Error! Try again later.
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group"><label class="col-md-1 control-label"><span>Name Map</span></label>
+
+            <div class="col-md-6">
+                <input type="text" name="map_name" class="form-control map_name " value="{$map->name}"></div>
+            <button type="button" class="btn btn-primary update_name">Update name</button>
+        </div>
+    </div>
     <div class="row">
         <div class="map__wrapper">
             <script
@@ -9,10 +27,10 @@
         </div>
     </div>
     <div class="row">
-        <ul class="nav nav-tabs col-lg-12">
-            <li class="active"><a href="#markers__list">{l s='Markers' mod=autorestocking}</a></li>
-            <li><a href="#polylines__list">{l s='Polylines' mod=autorestocking}</a></li>
-            <li><a href="#setting">{l s='Setting' mod=autorestocking}</a></li>
+        <ul class="nav nav-tabs col-lg-12 nav-justified">
+            <li class="active dis-pol"><a href="#markers__list">{l s='Markers' mod=autorestocking}</a></li>
+            <li class="dis-pol"><a href="#polylines__list">{l s='Polylines' mod=autorestocking}</a></li>
+            <li class="dis-pol"><a href="#setting">{l s='Setting' mod=autorestocking}</a></li>
         </ul>
     </div>
     <div class="row">
@@ -28,7 +46,7 @@
                 <div class="panel">
                     <h3>Setting</h3>
 
-                    <div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>
+                    <div class="form-group">
 
                     </div>
                     <div class="panel-footer">
