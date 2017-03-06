@@ -15,8 +15,22 @@ require_once(dirname(__FILE__) . '/classes/Markers.php');
 switch (Tools::getValue('ajax')) {
 
     case 'save_marker':
-        $src ='';
-        if (isset($_FILES['my_file'])) {
+        $src = false;
+        $id_marker = Tools::getValue('id_marker') ? Tools::getValue('id_marker') : '';
+
+        $name = Tools::getValue('name') ? Tools::getValue('name') : '';
+        $id_map = Tools::getValue('id_map') ? Tools::getValue('id_map') : '';
+        $coordinates = Tools::getValue('coordinates') ? Tools::getValue('coordinates') : '';
+        $icon = Tools::getValue('icon');
+        $method = Tools::getValue('method') ? Tools::getValue('method') : '';
+
+        $label_text = Tools::getValue('label_text') ? Tools::getValue('label_text') : '';
+        $window_text = Tools::getValue('window_text') ? Tools::getValue('window_text') : '';
+        $animate = Tools::getValue('animate') ? Tools::getValue('animate') : '';
+        $link = Tools::getValue('link') ? Tools::getValue('link') : '';
+        $script = Tools::getValue('script') ? Tools::getValue('script') : '';
+
+        if (isset($_FILES['my_file']['name'])) {
             if ($_FILES['my_file']['size'] > 500000) {
                 die(false);
             }
@@ -24,16 +38,42 @@ switch (Tools::getValue('ajax')) {
             $unique = md5($date);
             $target_file = _PS_IMG_DIR_ . $unique . '_' . basename($_FILES['my_file']['name']);
             $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
-            $check = getimagesize($_FILES['my_file']['tmp_name']);
+            /*$check = getimagesize($_FILES['my_file']['tmp_name']);
 
             if ($check === false) {
                 die(false);//check size
-            }
+            }*/
 
             $src = move_uploaded_file($_FILES['my_file']['tmp_name'], $target_file) ?
                 _PS_BASE_URL_ . '/img/'.$unique . '_' . basename($_FILES['my_file']['name']): '';
+            if ($method == 1) {
+                $icon = $src;
+            }
         }
-        echo Markers::saveMarkers($src);
+
+        if(empty($id_marker)){
+            $marker = new Markers();
+        } else {
+            $marker = new Markers($id_marker);
+        }
+        $marker->name_marker = $name;
+        $marker->id_map = $id_map;
+        $marker->coordinates = $coordinates;
+        $marker->icon = $icon;
+        $marker->method = $method;
+        $marker->label_text = $label_text;
+        $marker->window_text = $window_text;
+        $marker->animation = $animate;
+        $marker->link = $link;
+        $marker->script = $script;
+
+        if(empty($id_marker)){
+            $marker->add();
+        } else {
+            $marker->update();
+        }
+
+        echo $marker->id;
         break;
     case 'update_name':
         $map = new MapsAreas(Tools::getValue('id_map'));

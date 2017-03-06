@@ -16,16 +16,16 @@ PRIMARY KEY (`id_maps_areas`)
 )";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "markers` (
-`id` int(11) NOT NULL AUTO_INCREMENT,
-`id_maps_areas` int(11) ,
-`name` varchar(100) NOT NULL,
+`id_marker` int(11) NOT NULL AUTO_INCREMENT,
+`id_map` int(11) ,
+`name_marker` varchar(100) NOT NULL,
 `coordinates` text NOT NULL,
 `icon` varchar(255) NOT NULL,
 `method` int(3) NOT NULL,
 `label_text` text NOT NULL,
 `window_text` text NOT NULL,
-`animate` varchar(50) NOT NULL,
+`animation` varchar(50) NOT NULL,
 `link` varchar(255) NOT NULL,
 `script` text NOT NULL,
-PRIMARY KEY (`id`)
+PRIMARY KEY (`id_marker`)
 )";

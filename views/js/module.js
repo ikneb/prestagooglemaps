@@ -64,13 +64,15 @@ function addListenerForAddMarkers() {
     google.maps.event.addListener(map, 'click', function (event) {
         $('.marker__title').remove();
         var newLi = document.createElement('div');
-            addMarker(event.latLng, map);
-            id_marker = markers.length-1;
-            newLi.innerHTML =
-            '<div class="panel" data-id="' + id_marker + '" data-coord="'+
-            event.latLng.lat().toFixed(3)+','+event.latLng.lng().toFixed(3)+'"><h3>Marker</h3>' +
+        addMarker(event.latLng, map);
+        id_marker = markers.length - 1;
+        newLi.innerHTML =
+            '<div class="panel" data-id="' + id_marker + '" data-coord="' +
+            event.latLng.lat().toFixed(3) + ',' + event.latLng.lng().toFixed(3) + '"><h3>Marker</h3>' +
             '<form enctype="multipart/form-data" class="upload-img"  id="upload-img" method="post">' +
             '<div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>' +
+            '<input type="hidden" name="id_map" value="' + $('#maps-template').attr('data-id') + '">' +
+            '<input type="hidden" name="id_marker" value="">' +
             '<input type="text" name="name" class="form-control marker__name"></div>' +
             '<div class="form-group method-wrapp"><label class="col-md-4 control-label"><span>Icon</span></label>' +
             '<select name="method" class="marker__method">' +
@@ -115,7 +117,7 @@ $(document).ready(function () {
     /**
      * Change map name
      */
-    $('body').on('click', '.update_name', function(e){
+    $('body').on('click', '.update_name', function (e) {
         e.preventDefault();
         var name = $('.map_name').val();
         var id_map = $(this).closest('.maps-template').attr('data-id');
@@ -129,14 +131,14 @@ $(document).ready(function () {
                 id_map: id_map
             },
             success: function (data) {
-                if(data){
+                if (data) {
                     $('.alert-success').removeClass('no-display');
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('.alert-success').addClass('no-display');
                     }, 2500);
-                }else{
+                } else {
                     $('.alert-danger').removeClass('no-display');
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('.alert-danger').addClass('no-display');
                     }, 2500);
                 }
@@ -147,14 +149,14 @@ $(document).ready(function () {
     /**
      * Change map name
      */
-    $('body').on('keyup', '.map_name', function(e) {
+    $('body').on('keyup', '.map_name', function (e) {
         e.preventDefault();
         var name = $(this).val();
-        $(this).closest('#main').find('.page-title').html('Edit: '+name);
+        $(this).closest('#main').find('.page-title').html('Edit: ' + name);
     });
 
 
-    $('body').on('click', '.marker__default-icon', function(e){
+    $('body').on('click', '.marker__default-icon', function (e) {
         e.preventDefault();
         var img = $(this).val();
         var id = $(this).closest('.panel').attr('data-id');
@@ -252,7 +254,7 @@ $(document).ready(function () {
                 if (!_this.closest('.panel').find('.marker__title').hasClass('marker__title')) {
                     _this.closest('.panel').find('.action-wrap').after(
                         '<div class="form-group"><label class="col-md-4 control-label"><span>Title</span></label>' +
-                        '<textarea  name="title" class="marker__title"></textarea>' +
+                        '<textarea class="marker__title" name="label_text"></textarea>' +
                         '<div class="marker__remove col-md-4"><a href="title" title="Delete" class="delete">' +
                         '<i class="icon-trash"></i> Delete</a></div></div>'
                     );
@@ -262,7 +264,7 @@ $(document).ready(function () {
                 if (!_this.closest('.panel').find('.isset-click').hasClass('isset-click')) {
                     _this.closest('.panel').find('.action-wrap').after(
                         '<div class="form-group"><label class="col-md-4 control-label"><span>Info Window</span></label>' +
-                        '<textarea  name="window" class=" isset-click marker__window"></textarea>' +
+                        '<textarea  class=" isset-click marker__window" name="window_text"></textarea>' +
                         '<div class="marker__remove col-md-4"><a title="Delete" class="delete">' +
                         '<i class="icon-trash"></i> Delete</a></div></div>'
                     );
@@ -272,7 +274,7 @@ $(document).ready(function () {
                 if (!_this.closest('.panel').find('.isset-click').hasClass('isset-click')) {
                     _this.closest('.panel').find('.action-wrap').after(
                         '<div class="form-group"><label class="col-md-4 control-label"><span>Animation</span></label>' +
-                        '<select name="action" class="marker__animation isset-click">' +
+                        '<select class="marker__animation isset-click" name="animate">' +
                         '<option value="0">Select animation effect</option>' +
                         '<option value="BOUNCE">BOUNCE</option>' +
                         '<option value="DROP">DROP</option>' +
@@ -398,25 +400,27 @@ $(document).ready(function () {
     jQuery('body').on('submit', '.upload-img', function (e) {
         e.preventDefault();
         /*var id_map = $(this).closest('.maps-template').attr('data-id');
-        var name = $(this).closest('.panel').find('input[name="name"]').val();
-        var coordinates = $(this).closest('.panel').attr('data-coord');
-        var icon = $(this).closest('.panel').find('.marker__default-icon').val();
-        var method = $(this).closest('.panel').find('.marker__method').val();
-        //var download_icon = $(this).closest('.panel').find('.img').attr('src');
-        var label_text = $(this).closest('.panel').find('textarea[name="title"]').val() ?
-            $(this).closest('.panel').find('textarea[name="title"]').val() : '';
-        var window_text = $(this).closest('.panel').find('textarea[name="window"]').val() ?
-           $(this).closest('.panel').find('textarea[name="window"]').val() : '';
-        var animate =  $(this).closest('.panel').find('.marker__animation').val() ?
-            $(this).closest('.panel').find('.marker__animation').val() : '';
-        var link = $(this).closest('.panel').find('input[name="link"]').val() ?
-            $(this).closest('.panel').find('input[name="link"]').val() : '';
-        var script = $(this).closest('.panel').find('textarea[name="script"]').val() ?
-            $(this).closest('.panel').find('textarea[name="script"]').val() : '';*/
+         var name = $(this).closest('.panel').find('input[name="name"]').val();
+         var coordinates = $(this).closest('.panel').attr('data-coord');
+         var icon = $(this).closest('.panel').find('.marker__default-icon').val();
+         var method = $(this).closest('.panel').find('.marker__method').val();
+         //var download_icon = $(this).closest('.panel').find('.img').attr('src');
+         var label_text = $(this).closest('.panel').find('textarea[name="title"]').val() ?
+         $(this).closest('.panel').find('textarea[name="title"]').val() : '';
+         var window_text = $(this).closest('.panel').find('textarea[name="window"]').val() ?
+         $(this).closest('.panel').find('textarea[name="window"]').val() : '';
+         var animate =  $(this).closest('.panel').find('.marker__animation').val() ?
+         $(this).closest('.panel').find('.marker__animation').val() : '';
+         var link = $(this).closest('.panel').find('input[name="link"]').val() ?
+         $(this).closest('.panel').find('input[name="link"]').val() : '';
+         var script = $(this).closest('.panel').find('textarea[name="script"]').val() ?
+         $(this).closest('.panel').find('textarea[name="script"]').val() : '';*/
         /*if (method == 2) {
-            icon = 'default';
-            method = 0;
-        }*/
+         icon = 'default';
+         method = 0;
+         }*/
+        var _this = $(this);
+
         var formData = new FormData($(this)[0]);
         formData.append('ajax', 'save_marker');
         jQuery.ajax({
@@ -425,6 +429,9 @@ $(document).ready(function () {
             data: formData,
             async: false,
             success: function (data) {
+                if(data){
+                    _this.find('input[name="id_marker"]').attr('value', data);
+                }
                 console.log(data);
             },
             cache: false,
@@ -432,7 +439,6 @@ $(document).ready(function () {
             processData: false
         });
     });
-
 
 
     /**

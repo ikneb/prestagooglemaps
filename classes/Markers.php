@@ -31,7 +31,7 @@ class Markers extends ObjectModel
         'multilang' => false,
         'fields' => array(
             'id_marker' => array('type' => self::TYPE_INT),
-            'id_maps' => array('type' => self::TYPE_INT),
+            'id_map' => array('type' => self::TYPE_INT),
             'name_marker' => array('type' => self::TYPE_STRING),
             'coordinates' => array('type' => self::TYPE_STRING),
             'icon' => array('type' => self::TYPE_STRING),
@@ -60,7 +60,7 @@ class Markers extends ObjectModel
         return $all_ikon;
     }
 
-    public static function saveMarkers($src = false)
+    public function saveOrUpdateMarkers($src = false)
     {
         $name = Tools::getValue('name') ? Tools::getValue('name') : '';
         $id_map = Tools::getValue('id_map') ? Tools::getValue('name') : '';
@@ -76,6 +76,8 @@ class Markers extends ObjectModel
         if ($method == 1 && $src != false) {
             $icon = $src;
         }
+
+        $sql = '';
 
 
         return $method;
