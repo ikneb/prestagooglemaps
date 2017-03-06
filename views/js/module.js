@@ -1,9 +1,9 @@
 var labels = '';
 var labelIndex = 0;
 var map;
-var markers = [];
 var LatLngList = [];
 var files;
+var markers = [];
 var poly;
 var polies = [];
 var coord_poly = [];
@@ -15,7 +15,77 @@ function initMap() {
         zoom: 5,
         center: myLatlng
     });
+    renderMarkers(map);
     addListenerForAddMarkers();
+}
+
+function renderMarkers(map) {
+    if (markers_set.length > 0) {
+        jQuery.each(markers_set, function () {
+            var coord = this.coordinates;
+            var latlng = coord.split(',');
+            var location = {lat: parseInt(latlng[0]), lng: parseInt(latlng[1])};
+            var marker = new google.maps.Marker({
+                position: location,
+                label: labels[labelIndex++ % labels.length],
+                map: map,
+            });
+            if (this.method == 1) {
+                var icon = {
+                    url: this.icon,
+                    scaledSize: new google.maps.Size(35, 35)
+                };
+                marker.setIcon(icon);
+            } else if (this.method == 2) {
+                var icon = {
+                    url: '/modules/prestagooglemaps/views/image/marker-icon/' + this.icon,
+                    scaledSize: new google.maps.Size(50, 50)
+                };
+                marker.setIcon(icon);
+            }
+            if (this.label_text.length > 1) {
+                marker.setTitle(this.label_text);
+            }
+            if (this.window_text.length > 1) {
+                var contentString = '<div>' + this.window_text + '</div>';
+                google.maps.event.clearListeners(marker, 'click');
+                google.maps.event.addListener(marker, 'click', function () {
+
+                    var infowindow = new google.maps.InfoWindow({
+                        content: contentString,
+                        maxWidth: 300
+                    });
+                    infowindow.open(map, marker);
+                });
+            } else if (this.animation.length > 1) {
+                if (this.animation == 'BOUNCE') {
+                    marker.addListener('click', function () {
+                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                        setTimeout(function () {
+                            marker.setAnimation();
+                        }, 2100);
+                    });
+                } else if (this.animation == 'DROP') {
+                    marker.addListener('click', function () {
+                        marker.setAnimation(google.maps.Animation.DROP);
+                    });
+                }
+            } else if (this.link.length > 1) {
+                var value = this.link;
+                google.maps.event.clearListeners(marker, 'click');
+                google.maps.event.addListener(marker, 'click', function () {
+                    window.open(value);
+                });
+            } else if (this.script.length > 1) {
+                google.maps.event.clearListeners(marker, 'click');
+                var script = this.script;
+                google.maps.event.addListener(marker, 'click', function () {
+                    eval(script);
+                });
+            }
+            markers.push(marker);
+        });
+    }
 }
 
 function addMarker(location, map) {
@@ -72,7 +142,9 @@ function addListenerForAddMarkers() {
             '<form enctype="multipart/form-data" class="upload-img"  id="upload-img" method="post">' +
             '<div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>' +
             '<input type="hidden" name="id_map" value="' + $('#maps-template').attr('data-id') + '">' +
-            '<input type="hidden" name="id_marker" value="">' +
+            '<input type="hidden" name="id_marker">' +
+            '<input type="hidden" name="coordinates" value="' +
+            event.latLng.lat().toFixed(3) + ',' + event.latLng.lng().toFixed(3) + '">' +
             '<input type="text" name="name" class="form-control marker__name"></div>' +
             '<div class="form-group method-wrapp"><label class="col-md-4 control-label"><span>Icon</span></label>' +
             '<select name="method" class="marker__method">' +
@@ -429,7 +501,7 @@ $(document).ready(function () {
             data: formData,
             async: false,
             success: function (data) {
-                if(data){
+                if (data) {
                     _this.find('input[name="id_marker"]').attr('value', data);
                 }
                 console.log(data);
@@ -465,23 +537,23 @@ $(document).ready(function () {
      */
     jQuery(document).on('click', '.marker__remove-panel', function (e) {
         e.preventDefault();
-        var id = $(this).closest('.panel').attr('data-id');
-        console.log(id);
-        /* var id_map_post = jQuery(this).closest('.marker__wrapper').attr('data-postid');*/
-        $(this).closest('.panel').remove();
-        markers[id].setMap(null);
-        /*jQuery.ajax({
-         type: 'POST',
-         url: '/wp-content/plugins/googlmapsareas/ajax.php',
-         data: {
-         action: 'remove_marker',
-         id_marker: id,
-         id_map_post: id_map_post,
-         },
-         success: function (data) {
-         process(data);
-         }
-         });*/
+        var _this = $(this);
+        var id = _this.closest('.panel').attr('data-id');
+        var id_marker = _this.closest('.panel').find('input[name="id_marker"]').val();
+        var id_map = _this.closest('.maps-template').attr('data-id');
+        jQuery.ajax({
+            type: 'POST',
+            url: baseDir + 'modules/prestagooglemaps/ajax.php',
+            data: {
+                ajax: 'remove_marker',
+                id_marker: id_marker,
+                id_map: id_map,
+            },
+            success: function (data) {
+                _this.closest('.panel').remove();
+                markers[id].setMap(null);
+            }
+        });
 
 
     });

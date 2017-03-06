@@ -82,4 +82,5 @@ class Markers extends ObjectModel
 
         return $method;
     }
+
 }

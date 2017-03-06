@@ -87,6 +87,10 @@ switch (Tools::getValue('ajax')) {
         $all_ikon = Markers::getAllDefaultIcon();
         echo json_encode($all_ikon);
         break;
+    case 'remove_marker':
+        $marker = new Markers(Tools::getValue('id_marker'));
+        $marker->delete();
+        break;
 
 }
 /*

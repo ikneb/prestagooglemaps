@@ -26,4 +26,17 @@ class MapsAreas extends ObjectModel
         ),
     );
 
+
+    public function getAllMarkers() {
+
+        $sql = "SELECT * FROM " . _DB_PREFIX_ . "markers WHERE id_map=" . $this->id_maps_areas."";
+
+        $markers = Db::getInstance()->executeS($sql);
+
+        if ($markers) {
+            return $markers;
+        }
+        return false;
+    }
+
 }
