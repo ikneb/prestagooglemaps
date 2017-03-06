@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2017 WeeTeam
  *
@@ -6,8 +7,6 @@
  * @copyright 2016 WeeTeam
  * @license   http://www.gnu.org/philosophy/categories.html (Shareware)
  */
-
-
 class Markers extends ObjectModel
 {
     public $id_marker;
@@ -45,7 +44,8 @@ class Markers extends ObjectModel
         ),
     );
 
-    public static function getAllDefaultIcon(){
+    public static function getAllDefaultIcon()
+    {
         $all_ikon = scandir(_PS_MODULE_DIR_ . 'prestagooglemaps/views/image/marker-icon');
         $array = array_flip($all_ikon);
         unset($array['.']);
@@ -58,5 +58,26 @@ class Markers extends ObjectModel
             }
         }
         return $all_ikon;
+    }
+
+    public static function saveMarkers($src = false)
+    {
+        $name = Tools::getValue('name') ? Tools::getValue('name') : '';
+        $id_map = Tools::getValue('id_map') ? Tools::getValue('name') : '';
+        $coordinates = Tools::getValue('coordinates') ? Tools::getValue('coordinates') : '';
+        $icon = Tools::getValue('icon');
+        $method = Tools::getValue('method') ? Tools::getValue('method') : '';
+        $label_text = Tools::getValue('label_text') ? Tools::getValue('label_text') : '';
+        $window_text = Tools::getValue('window_text') ? Tools::getValue('window_text') : '';
+        $animate = Tools::getValue('animate') ? Tools::getValue('animate') : '';
+        $link = Tools::getValue('link') ? Tools::getValue('link') : '';
+        $script = Tools::getValue('script') ? Tools::getValue('script') : '';
+
+        if ($method == 1 && $src != false) {
+            $icon = $src;
+        }
+
+
+        return $method;
     }
 }

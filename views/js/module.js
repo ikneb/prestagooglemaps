@@ -69,7 +69,7 @@ function addListenerForAddMarkers() {
             newLi.innerHTML =
             '<div class="panel" data-id="' + id_marker + '" data-coord="'+
             event.latLng.lat().toFixed(3)+','+event.latLng.lng().toFixed(3)+'"><h3>Marker</h3>' +
-            '<form enctype="multipart/form-data" class="upload-img" method="post">' +
+            '<form enctype="multipart/form-data" class="upload-img"  id="upload-img" method="post">' +
             '<div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>' +
             '<input type="text" name="name" class="form-control marker__name"></div>' +
             '<div class="form-group method-wrapp"><label class="col-md-4 control-label"><span>Icon</span></label>' +
@@ -395,9 +395,9 @@ $(document).ready(function () {
     /**
      * Save or update marker
      */
-    jQuery(document).on('submit', '.upload-img', function (e) {
+    jQuery('body').on('submit', '.upload-img', function (e) {
         e.preventDefault();
-        var id_map = $(this).closest('.maps-template').attr('data-id');
+        /*var id_map = $(this).closest('.maps-template').attr('data-id');
         var name = $(this).closest('.panel').find('input[name="name"]').val();
         var coordinates = $(this).closest('.panel').attr('data-coord');
         var icon = $(this).closest('.panel').find('.marker__default-icon').val();
@@ -412,20 +412,24 @@ $(document).ready(function () {
         var link = $(this).closest('.panel').find('input[name="link"]').val() ?
             $(this).closest('.panel').find('input[name="link"]').val() : '';
         var script = $(this).closest('.panel').find('textarea[name="script"]').val() ?
-            $(this).closest('.panel').find('textarea[name="script"]').val() : '';
-
-        var formData = new FormData($(this)[0]);
-        if (method == 2) {
+            $(this).closest('.panel').find('textarea[name="script"]').val() : '';*/
+        /*if (method == 2) {
             icon = 'default';
             method = 0;
-        }
+        }*/
+        var formData = new FormData($(this)[0]);
+        formData.append('ajax', 'save_marker');
         jQuery.ajax({
             type: 'POST',
-            url: '/modules/prestagooglemaps/ajax.php',
+            url: baseDir + 'modules/prestagooglemaps/ajax.php',
             data: formData,
+            async: false,
             success: function (data) {
                 console.log(data);
-            }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
         });
     });
 

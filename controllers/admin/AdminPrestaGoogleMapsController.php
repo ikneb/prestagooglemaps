@@ -45,6 +45,7 @@ class AdminPrestaGoogleMapsController extends ModuleAdminController
 
     public function renderForm()
     {
+
         $map = '';
         $id_map = Tools::getValue('id_maps_areas');
         if (!$id_map) {

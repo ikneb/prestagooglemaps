@@ -15,7 +15,25 @@ require_once(dirname(__FILE__) . '/classes/Markers.php');
 switch (Tools::getValue('ajax')) {
 
     case 'save_marker':
-        echo Tools::getValue('formData');
+        $src ='';
+        if (isset($_FILES['my_file'])) {
+            if ($_FILES['my_file']['size'] > 500000) {
+                die(false);
+            }
+            $date = date('H:i:s');
+            $unique = md5($date);
+            $target_file = _PS_IMG_DIR_ . $unique . '_' . basename($_FILES['my_file']['name']);
+            $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+            $check = getimagesize($_FILES['my_file']['tmp_name']);
+
+            if ($check === false) {
+                die(false);//check size
+            }
+
+            $src = move_uploaded_file($_FILES['my_file']['tmp_name'], $target_file) ?
+                _PS_BASE_URL_ . '/img/'.$unique . '_' . basename($_FILES['my_file']['name']): '';
+        }
+        echo Markers::saveMarkers($src);
         break;
     case 'update_name':
         $map = new MapsAreas(Tools::getValue('id_map'));
@@ -31,3 +49,7 @@ switch (Tools::getValue('ajax')) {
         break;
 
 }
+/*
+print_r($_FILES);
+
+print_r($_POST);*/

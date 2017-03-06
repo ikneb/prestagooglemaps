@@ -9,3 +9,4 @@
 
 $sql = array();
 $sql[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'maps_areas`;';
+$sql[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'markers`;';
