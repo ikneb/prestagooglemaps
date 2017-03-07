@@ -61,6 +61,7 @@ class AdminPrestaGoogleMapsController extends ModuleAdminController
         } else {
             $map = new MapsAreas($id_map);
             $markers = $map->getAllMarkers();
+            $polylines = $map->getAllPolylines();
             $icons = Markers::getAllDefaultIcon();
 
         }

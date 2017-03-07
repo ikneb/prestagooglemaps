@@ -39,7 +39,8 @@
                 <h4 class="marker__title">{l s='If you want add marker, please click for map.' mod=autorestocking}</h4>
                 {if $markers_set }
                     {foreach from=$markers_set item=marker name=marker}
-                        <div class="panel" data-id="{$smarty.foreach.marker.iteration - 1}" data-coord="{$marker.coordinates}"><h3>Marker</h3>
+                        <div class="panel" data-id="{$smarty.foreach.marker.iteration - 1}"
+                             data-coord="{$marker.coordinates}"><h3>Marker</h3>
 
                             <form enctype="multipart/form-data" class="upload-img" id="upload-img" method="post">
                                 <div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>
@@ -90,34 +91,57 @@
                                     </select>
                                 </div>
                                 {if $marker.label_text}
-                                    <div class="form-group"><label class="col-md-4 control-label"><span>Title</span></label>
-                                    <textarea class="marker__title" name="label_text" >{$marker.label_text}</textarea>
-                                    <div class="marker__remove col-md-4"><a href="title" title="Delete" class="delete">
-                                            <i class="icon-trash"></i> Delete</a></div></div>
+                                    <div class="form-group"><label
+                                                class="col-md-4 control-label"><span>Title</span></label>
+                                        <textarea class="marker__title"
+                                                  name="label_text">{$marker.label_text}</textarea>
+
+                                        <div class="marker__remove col-md-4"><a href="title" title="Delete"
+                                                                                class="delete">
+                                                <i class="icon-trash"></i> Delete</a></div>
+                                    </div>
                                 {/if}
                                 {if $marker.window_text}
-                                    <div class="form-group"><label class="col-md-4 control-label"><span>Info Window</span></label>
-                                    <textarea  class=" isset-click marker__window" name="window_text">{$marker.window_text}</textarea>
-                                    <div class="marker__remove col-md-4"><a title="Delete" class="delete">
-                                            <i class="icon-trash"></i> Delete</a></div></div>
+                                    <div class="form-group"><label
+                                                class="col-md-4 control-label"><span>Info Window</span></label>
+                                        <textarea class=" isset-click marker__window"
+                                                  name="window_text">{$marker.window_text}</textarea>
+
+                                        <div class="marker__remove col-md-4"><a title="Delete" class="delete">
+                                                <i class="icon-trash"></i> Delete</a></div>
+                                    </div>
                                 {elseif $marker.animation}
                                     <div class="form-group"><label class="col-md-4 control-label"><span>Animation</span></label>
-                                    <select class="marker__animation isset-click" name="animate">
-                                        <option value="0">Select animation effect</option>
-                                        <option value="BOUNCE" {if $marker.animation == 'BOUNCE'}selected{/if}>BOUNCE</option>
-                                        <option value="DROP" {if $marker.animation == 'DROP'}selected{/if}>DROP</option>
-                                        </select><div class="marker__remove col-md-4"><a title="Delete" class="delete">
-                                            <i class="icon-trash"></i> Delete</a></div></div>
+                                        <select class="marker__animation isset-click" name="animate">
+                                            <option value="0">Select animation effect</option>
+                                            <option value="BOUNCE" {if $marker.animation == 'BOUNCE'}selected{/if}>
+                                                BOUNCE
+                                            </option>
+                                            <option value="DROP" {if $marker.animation == 'DROP'}selected{/if}>DROP
+                                            </option>
+                                        </select>
+
+                                        <div class="marker__remove col-md-4"><a title="Delete" class="delete">
+                                                <i class="icon-trash"></i> Delete</a></div>
+                                    </div>
                                 {elseif $marker.link}
-                                    <div class="form-group"><label class="col-md-4 control-label"><span>Redirect link</span></label>
-                                    <input type="text" name="link" class="form-control marker__link isset-click" value="{$marker.link}">
-                                    <div class="marker__remove col-md-4"><a href="link" title="Delete" class="delete">
-                                            <i class="icon-trash"></i> Delete</a></div></div>
+                                    <div class="form-group"><label
+                                                class="col-md-4 control-label"><span>Redirect link</span></label>
+                                        <input type="text" name="link" class="form-control marker__link isset-click"
+                                               value="{$marker.link}">
+
+                                        <div class="marker__remove col-md-4"><a href="link" title="Delete"
+                                                                                class="delete">
+                                                <i class="icon-trash"></i> Delete</a></div>
+                                    </div>
                                 {elseif $marker.script}
-                                    <div class="form-group"><label class="col-md-4 control-label"><span>Script</span></label>
-                                    <textarea  name="script" class="marker__script">{$marker.script}</textarea>
-                                    <div class="marker__remove col-md-4"><a  title="Delete" class="delete">
-                                            <i class="icon-trash"></i> Delete</a></div></div>
+                                    <div class="form-group"><label
+                                                class="col-md-4 control-label"><span>Script</span></label>
+                                        <textarea name="script" class="marker__script">{$marker.script}</textarea>
+
+                                        <div class="marker__remove col-md-4"><a title="Delete" class="delete">
+                                                <i class="icon-trash"></i> Delete</a></div>
+                                    </div>
                                 {/if}
                                 <div class="panel-footer">
 
@@ -135,6 +159,11 @@
             </div>
             <div id="polylines__list" class="tab col-md-12  no-display">
                 <button type="button" class="btn btn-primary polylines__add">Add new polyline</button>
+                {if $polylines }
+                    {foreach from=$polylines item=polyline name=polyline}
+
+                    {/foreach}
+                {/if}
             </div>
             <div id="setting" class="tab col-md-12  no-display">
 

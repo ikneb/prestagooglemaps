@@ -11,6 +11,7 @@ require_once(dirname(__FILE__) . '../../../config/config.inc.php');
 require_once(dirname(__FILE__) . '../../../init.php');
 require_once(dirname(__FILE__) . '/classes/MapsAreas.php');
 require_once(dirname(__FILE__) . '/classes/Markers.php');
+require_once(dirname(__FILE__) . '/classes/Polylines.php');
 
 switch (Tools::getValue('ajax')) {
 
@@ -91,9 +92,32 @@ switch (Tools::getValue('ajax')) {
         $marker = new Markers(Tools::getValue('id_marker'));
         $marker->delete();
         break;
+    case 'save_poly':
+        $id = Tools::getValue('id_polyline') ? Tools::getValue('id_polyline') : '';
+        if($id){
+            $poly = new Polylines($id);
+        } else {
+            $poly = new Polylines();
+        }
+
+        $poly->id_map = Tools::getValue('id_map') ?  Tools::getValue('id_map'): '';
+        $poly->name_polylines = Tools::getValue('name_polylines') ?  Tools::getValue('name_polylines'): '';
+        $poly->coordinates = Tools::getValue('coordinates') ?  htmlspecialchars(Tools::getValue('coordinates')): '';
+        $poly->thick = Tools::getValue('thick') ?  Tools::getValue('thick'): '';
+        $poly->color = Tools::getValue('color') ?  Tools::getValue('color'): '';
+
+        if($id){
+            $poly->update();
+        } else {
+            $poly->add();
+        }
+        echo $poly->id;
+        break;
+    case 'remove_poly':
+        $poly = new Polylines(Tools::getValue('id_polyline'));
+        if ($poly->delete()) {
+            echo true;
+        }
+        break;
 
 }
-/*
-print_r($_FILES);
-
-print_r($_POST);*/

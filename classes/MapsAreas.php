@@ -39,4 +39,16 @@ class MapsAreas extends ObjectModel
         return false;
     }
 
+    public function getAllPolylines() {
+
+        $sql = "SELECT * FROM " . _DB_PREFIX_ . "polylines WHERE id_map=" . $this->id_maps_areas."";
+
+        $polylines = Db::getInstance()->executeS($sql);
+
+        if ($polylines) {
+            return $polylines;
+        }
+        return false;
+    }
+
 }

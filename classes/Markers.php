@@ -60,27 +60,4 @@ class Markers extends ObjectModel
         return $all_ikon;
     }
 
-    public function saveOrUpdateMarkers($src = false)
-    {
-        $name = Tools::getValue('name') ? Tools::getValue('name') : '';
-        $id_map = Tools::getValue('id_map') ? Tools::getValue('name') : '';
-        $coordinates = Tools::getValue('coordinates') ? Tools::getValue('coordinates') : '';
-        $icon = Tools::getValue('icon');
-        $method = Tools::getValue('method') ? Tools::getValue('method') : '';
-        $label_text = Tools::getValue('label_text') ? Tools::getValue('label_text') : '';
-        $window_text = Tools::getValue('window_text') ? Tools::getValue('window_text') : '';
-        $animate = Tools::getValue('animate') ? Tools::getValue('animate') : '';
-        $link = Tools::getValue('link') ? Tools::getValue('link') : '';
-        $script = Tools::getValue('script') ? Tools::getValue('script') : '';
-
-        if ($method == 1 && $src != false) {
-            $icon = $src;
-        }
-
-        $sql = '';
-
-
-        return $method;
-    }
-
 }

@@ -154,7 +154,6 @@ function addListenerForAddMarkers() {
             '</select></div>' +
             '<div class="form-group no-display method"><label class="col-md-4 control-label"><span></span></label>' +
             '<select name="icon" class="marker__default-icon">' +
-            '<option value="0">Default</option>' +
             '</select></div>' +
             '<div class="form-group no-display download" id="img">' +
             '<div class="download-form">' +
@@ -471,31 +470,12 @@ $(document).ready(function () {
      */
     jQuery('body').on('submit', '.upload-img', function (e) {
         e.preventDefault();
-        /*var id_map = $(this).closest('.maps-template').attr('data-id');
-         var name = $(this).closest('.panel').find('input[name="name"]').val();
-         var coordinates = $(this).closest('.panel').attr('data-coord');
-         var icon = $(this).closest('.panel').find('.marker__default-icon').val();
-         var method = $(this).closest('.panel').find('.marker__method').val();
-         //var download_icon = $(this).closest('.panel').find('.img').attr('src');
-         var label_text = $(this).closest('.panel').find('textarea[name="title"]').val() ?
-         $(this).closest('.panel').find('textarea[name="title"]').val() : '';
-         var window_text = $(this).closest('.panel').find('textarea[name="window"]').val() ?
-         $(this).closest('.panel').find('textarea[name="window"]').val() : '';
-         var animate =  $(this).closest('.panel').find('.marker__animation').val() ?
-         $(this).closest('.panel').find('.marker__animation').val() : '';
-         var link = $(this).closest('.panel').find('input[name="link"]').val() ?
-         $(this).closest('.panel').find('input[name="link"]').val() : '';
-         var script = $(this).closest('.panel').find('textarea[name="script"]').val() ?
-         $(this).closest('.panel').find('textarea[name="script"]').val() : '';*/
-        /*if (method == 2) {
-         icon = 'default';
-         method = 0;
-         }*/
+
         var _this = $(this);
 
         var formData = new FormData($(this)[0]);
         formData.append('ajax', 'save_marker');
-        jQuery.ajax({
+        $.ajax({
             type: 'POST',
             url: baseDir + 'modules/prestagooglemaps/ajax.php',
             data: formData,
@@ -504,7 +484,17 @@ $(document).ready(function () {
                 if (data) {
                     _this.find('input[name="id_marker"]').attr('value', data);
                 }
-                console.log(data);
+                if (data) {
+                    $('.alert-success').removeClass('no-display');
+                    setTimeout(function () {
+                        $('.alert-success').addClass('no-display');
+                    }, 2500);
+                } else {
+                    $('.alert-danger').removeClass('no-display');
+                    setTimeout(function () {
+                        $('.alert-danger').addClass('no-display');
+                    }, 2500);
+                }
             },
             cache: false,
             contentType: false,
@@ -565,7 +555,11 @@ $(document).ready(function () {
         var newLi = document.createElement('div');
         newLi.innerHTML =
             '<div class="panel"><h3></i>Marker</h3>' +
+            '<form enctype="multipart/form-data" class="poly-save-form" method="post">' +
             '<div class="form-group"><label class="col-md-4 control-label"><span>Name of the line</span></label>' +
+            '<input type="hidden" name="id_polyline">' +
+            '<input type="hidden" name="coordinates">' +
+            '<input type="hidden" name="id_map" value="' + $('#maps-template').attr('data-id') + '">' +
             '<input type="text" name="name" class="form-control"></div>' +
             '<div class="form-group"><label class="col-md-4 control-label"><span>Thickness of the line</span></label>' +
             '<input type="number" name="thick" class="form-control polyline__thick" value="2"></div>' +
@@ -581,7 +575,7 @@ $(document).ready(function () {
             'name=""><i class="process-icon-save"></i> Save</button>' +
             '<a href="" class="btn btn-default polyline__remove"><i class="process-icon-cancel">' +
             '</i> Cancel</a>' +
-            '</div></div>';
+            '</div></form></div>';
 
         polylines__list.appendChild(newLi);
 
@@ -600,6 +594,7 @@ $(document).ready(function () {
             path.push(event.latLng);
             coord_poly = getPathVariableCode(poly);
             $(newLi).find('.panel').attr('data-coord', coord_poly);
+            $(newLi).find('input[name="coordinates"]').attr('value', coord_poly);
 
         });
         $(newLi).find('.panel').attr('data-id', polies.length);
@@ -608,11 +603,43 @@ $(document).ready(function () {
 
     });
 
-    $('body').on('click', '.polyline__save', function (e) {
+    /**
+     *   Save polylines
+     */
+    $('body').on('submit', '.poly-save-form', function (e) {
         e.preventDefault();
-        $(this).closest('.maps-template').find('.dis-pol').removeClass('disabled');
+        var _this = $(this);
+        _this.closest('.maps-template').find('.dis-pol').removeClass('disabled');
         switchBetveenPolyMark()
         $('.polylines__add').removeClass('no-display');
+        var formData = new FormData($(this)[0]);
+        formData.append('ajax', 'save_poly');
+        $.ajax({
+            type: 'POST',
+            url: baseDir + 'modules/prestagooglemaps/ajax.php',
+            data: formData,
+            async: false,
+            success: function (data) {
+                console.log(data);
+                if (data) {
+                    _this.find('input[name="id_polyline"]').attr('value', data);
+                }
+                if (data) {
+                    $('.alert-success').removeClass('no-display');
+                    setTimeout(function () {
+                        $('.alert-success').addClass('no-display');
+                    }, 2500);
+                } else {
+                    $('.alert-danger').removeClass('no-display');
+                    setTimeout(function () {
+                        $('.alert-danger').addClass('no-display');
+                    }, 2500);
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
 
     });
 
@@ -621,9 +648,23 @@ $(document).ready(function () {
         $(this).closest('.maps-template').find('.dis-pol').removeClass('disabled');
         switchBetveenPolyMark();
         var id = $(this).closest('.panel').attr('data-id');
+        var id_polyline = $(this).closest('.panel').find('input[name="id_polyline"]').val();
         $('.polylines__add').removeClass('no-display');
         polies[id].setMap(null);
         jQuery(this).closest('.panel').remove();
+        $.ajax({
+            type: 'POST',
+            url: baseDir + 'modules/prestagooglemaps/ajax.php',
+            data: {
+                ajax: 'remove_poly',
+                id_polyline: id_polyline
+            },
+            success: function (data) {
+                console.log(data);
+
+            }
+        });
+
     });
 
     $('body').on('keyup', '.polyline__thick', function () {
@@ -644,8 +685,3 @@ $(document).ready(function () {
         markers[id].setIcon();
     });
 });
-
-
-
-
-
