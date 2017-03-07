@@ -101,7 +101,7 @@ switch (Tools::getValue('ajax')) {
         }
 
         $poly->id_map = Tools::getValue('id_map') ?  Tools::getValue('id_map'): '';
-        $poly->name_polylines = Tools::getValue('name_polylines') ?  Tools::getValue('name_polylines'): '';
+        $poly->name_polyline = Tools::getValue('name') ?  Tools::getValue('name'): '';
         $poly->coordinates = Tools::getValue('coordinates') ?  htmlspecialchars(Tools::getValue('coordinates')): '';
         $poly->thick = Tools::getValue('thick') ?  Tools::getValue('thick'): '';
         $poly->color = Tools::getValue('color') ?  Tools::getValue('color'): '';

@@ -161,7 +161,28 @@
                 <button type="button" class="btn btn-primary polylines__add">Add new polyline</button>
                 {if $polylines }
                     {foreach from=$polylines item=polyline name=polyline}
-
+                        <div class="panel"><h3></i>Polyline</h3>
+                        <form enctype="multipart/form-data" class="poly-save-form" method="post">
+                            <div class="form-group"><label class="col-md-4 control-label"><span>Name of the line</span></label>
+                                <input type="hidden" name="id_polyline" value="{$polyline.id_polyline}">
+                                <input type="hidden" name="coordinates" value="{$polyline.coordinates}">
+                                <input type="hidden" name="id_map" value="{$polyline.id_map}">
+                                <input type="text" name="name" class="form-control" value="{$polyline.name_polyline}"></div>
+                            <div class="form-group"><label class="col-md-4 control-label"><span>Thickness of the line</span></label>
+                                <input type="number" name="thick" class="form-control polyline__thick" value="{$polyline.thick}"></div>
+                            <div class="form-group"><label class="col-md-4 control-label"><span>Color</span></label>
+                                <select name="select" class="polyline__color">
+                                    <option value="#000000" {if $polyline.color == '#000000'}selected{/if}>Black</option>
+                                    <option value="#FF0000" {if $polyline.color == '#FF0000'}selected{/if}>Red</option>
+                                    <option value="#0000F0" {if $polyline.color == '#0000F0'}selected{/if}>Blue</option>
+                                    <option value="#008000" {if $polyline.color == '#008000'}selected{/if}>Green</option>
+                                    <option value="#808080" {if $polyline.color == '#808080'}selected{/if}>Gray</option>
+                                    </select></div>
+                            <div class="panel-footer"><button type="submit" class="btn btn-default pull-right polyline__save"
+                                name=""><i class="process-icon-save"></i> Save</button>
+                                <a href="" class="btn btn-default polyline__remove"><i class="process-icon-cancel">
+                                        </i> Cancel</a>
+                                </div></form></div>
                     {/foreach}
                 {/if}
             </div>

@@ -31,9 +31,9 @@ PRIMARY KEY (`id_marker`)
 )";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "polylines` (
-`id_polylines` int(11) NOT NULL AUTO_INCREMENT,
+`id_polyline` int(11) NOT NULL AUTO_INCREMENT,
 `id_map` int(11) ,
-`name_polylines` varchar(100) NOT NULL,
+`name_polyline` varchar(100) NOT NULL,
 `coordinates` text NOT NULL,
 `thick` int(5) NOT NULL,
 `color` varchar(50) NOT NULL,
