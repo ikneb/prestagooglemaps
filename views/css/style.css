@@ -93,3 +93,17 @@
 .update_name{
 
 }
+
+.size-input {
+    margin-left: 65px;
+    display: inline-block;
+}
+
+#widht,#height {
+    border-radius: 5px;
+    height: 27px;
+}
+
+.height-wrapper {
+    margin-left: -80px;
+}

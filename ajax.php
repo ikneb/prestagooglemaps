@@ -119,5 +119,14 @@ switch (Tools::getValue('ajax')) {
             echo true;
         }
         break;
+    case 'save_setting':
+
+            $map = new MapsAreas(Tools::getValue('id_map'));
+            $map->position = Tools::getValue('position');
+            $map->widht = Tools::getValue('widht');
+            $map->height = Tools::getValue('height');
+            $map->update();
+
+        break;
 
 }

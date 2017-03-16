@@ -63,7 +63,6 @@ class AdminPrestaGoogleMapsController extends ModuleAdminController
             $markers = $map->getAllMarkers();
             $polylines = $map->getAllPolylines();
             $icons = Markers::getAllDefaultIcon();
-
         }
         Media::addJsDef(array('markers_set' => $markers));
 

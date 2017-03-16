@@ -15,13 +15,17 @@ function initMap() {
         zoom: 5,
         center: myLatlng
     });
+
     renderMarkers(map);
     addListenerForAddMarkers();
+
+
 }
 
 function renderMarkers(map) {
     if (markers_set.length > 0) {
         jQuery.each(markers_set, function () {
+
             var coord = this.coordinates;
             var latlng = coord.split(',');
             var location = {lat: parseInt(latlng[0]), lng: parseInt(latlng[1])};
@@ -85,6 +89,16 @@ function renderMarkers(map) {
             }
             markers.push(marker);
         });
+
+        //set position map if isset markers
+        if (markers.length > 0) {
+            var latlngbounds = new google.maps.LatLngBounds();
+            markers.forEach(function (latLng) {
+                latlngbounds.extend(latLng.getPosition());
+            });
+            map.setCenter(latlngbounds.getCenter());
+            map.fitBounds(latlngbounds);
+        }
     }
 }
 
@@ -179,11 +193,17 @@ function addListenerForAddMarkers() {
         markers__list.appendChild(newLi);
         getMarker(newLi);
         $(newLi).find('.panel').attr('data-id', id_marker);
+
     });
 }
 
+jQuery(document).load(function () {
+
+});
+
 
 $(document).ready(function () {
+
 
     /**
      * Change map name
@@ -683,5 +703,29 @@ $(document).ready(function () {
         var id = button.closest('.panel').attr('data-id');
         button.closest('.panel').find('.img').attr('src', '/modules/prestagooglemaps/views/image/default.png');
         markers[id].setIcon();
+    });
+
+
+    //setting
+    $('body').on('click', '.setting__save', function () {
+        var position = $('input[name="render_map"]:checked').val();
+        var id_map = $(this).closest('.maps-template').attr('data-id');
+        var height = $('input[name="height"]').val();
+        var widht = $('input[name="widht"]').val();
+        $.ajax({
+            type: 'POST',
+            url: baseDir + 'modules/prestagooglemaps/ajax.php',
+            data: {
+                ajax: 'save_setting',
+                position: position,
+                id_map: id_map,
+                height: height,
+                widht: widht
+            },
+            success: function (data) {
+                console.log(data);
+            }
+        });
+
     });
 });

@@ -12,6 +12,11 @@ class MapsAreas extends ObjectModel
 {
     public $id_maps_areas;
     public $name;
+    public $position;
+    public $size;
+    public $widht;
+    public $height;
+
 
     /**
      * @see ObjectModel::$definition
@@ -22,7 +27,10 @@ class MapsAreas extends ObjectModel
         'multilang' => false,
         'fields' => array(
             'id_maps_areas' => array('type' => self::TYPE_INT),
-            'name' => array('type' => self::TYPE_STRING)
+            'name' => array('type' => self::TYPE_STRING),
+            'position' => array('type' => self::TYPE_INT),
+            'widht' => array('type' => self::TYPE_INT),
+            'height' => array('type' => self::TYPE_INT)
         ),
     );
 

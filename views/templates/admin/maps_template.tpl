@@ -1,4 +1,4 @@
-<div class="container maps-template" id="maps-template" data-id="{$map->id}">
+<div class="container maps-template" id="maps-template" data-id="{$map->id|escape:'htmlall':'UTF-8'}">
     <div class="row">
         <div class="alert alert-success no-display">
             <button type="button" class="close" data-dismiss="alert">×</button>
@@ -13,7 +13,8 @@
         <div class="form-group"><label class="col-md-1 control-label"><span>Name Map</span></label>
 
             <div class="col-md-6">
-                <input type="text" name="map_name" class="form-control map_name " value="{$map->name}"></div>
+                <input type="text" name="map_name" class="form-control map_name "
+                       value="{$map->name|escape:'htmlall':'UTF-8'}"></div>
             <button type="button" class="btn btn-primary update_name">Update name</button>
         </div>
     </div>
@@ -44,11 +45,15 @@
 
                             <form enctype="multipart/form-data" class="upload-img" id="upload-img" method="post">
                                 <div class="form-group"><label class="col-md-4 control-label"><span>Name</span></label>
-                                    <input type="hidden" name="id_map" value="{$marker.id_map}">
-                                    <input type="hidden" name="id_marker" value="{$marker.id_marker}">
-                                    <input type="hidden" name="coordinates" value="{$marker.coordinates}">
+                                    <input type="hidden" name="id_map"
+                                           value="{$marker.id_map|escape:'htmlall':'UTF-8'}">
+                                    <input type="hidden" name="id_marker"
+                                           value="{$marker.id_marker|escape:'htmlall':'UTF-8'}">
+                                    <input type="hidden" name="coordinates"
+                                           value="{$marker.coordinates|escape:'htmlall':'UTF-8'}">
                                     <input type="text" name="name" class="form-control marker__name"
-                                           value="{if $marker.name_marker}{$marker.name_marker}{/if}"></div>
+                                           value="{if $marker.name_marker}{$marker.name_marker|escape:'htmlall':'UTF-8'}{/if}">
+                                </div>
                                 <div class="form-group method-wrapp"><label
                                             class="col-md-4 control-label"><span>Icon</span></label>
                                     <select name="method" class="marker__method">
@@ -63,8 +68,8 @@
                                         {assign var=png value=".png"}
                                         {foreach from=$icons item=icon}
                                             {assign var=icon_png value="`$icon``$png`"}
-                                            <option value="{$icon}.png"
-                                                    {if $marker.icon == $icon_png}selected{/if}>{$icon}</option>
+                                            <option value="{$icon|escape:'htmlall':'UTF-8'}.png"
+                                                    {if $marker.icon == $icon_png}selected{/if}>{$icon|escape:'htmlall':'UTF-8'}</option>
                                         {/foreach}
                                     </select></div>
                                 <div class="form-group {if $marker.method != 1}no-display{/if} download" id="img">
@@ -73,7 +78,9 @@
                                         <button type="submit" class="remove_image_button button">&times;</button>
                                         <input id="my_file" class="custom-file-input" type="file" name="my_file"></div>
                                     <img class="img"
-                                         src="{if $marker.method == 1}{$marker.icon}{else}/modules/prestagooglemaps/views/image/default.png{/if}"
+                                         src="{if $marker.method == 1}
+                                         {$marker.icon|escape:'htmlall':'UTF-8'}
+                                         {else}/modules/prestagooglemaps/views/image/default.png{/if}"
                                          width="116px" height="116px"/>
                                 </div>
                                 <div class="form-group action-wrap"><label
@@ -94,7 +101,7 @@
                                     <div class="form-group"><label
                                                 class="col-md-4 control-label"><span>Title</span></label>
                                         <textarea class="marker__title"
-                                                  name="label_text">{$marker.label_text}</textarea>
+                                                  name="label_text">{$marker.label_text|escape:'htmlall':'UTF-8'}</textarea>
 
                                         <div class="marker__remove col-md-4"><a href="title" title="Delete"
                                                                                 class="delete">
@@ -105,7 +112,7 @@
                                     <div class="form-group"><label
                                                 class="col-md-4 control-label"><span>Info Window</span></label>
                                         <textarea class=" isset-click marker__window"
-                                                  name="window_text">{$marker.window_text}</textarea>
+                                                  name="window_text">{$marker.window_text|escape:'htmlall':'UTF-8'}</textarea>
 
                                         <div class="marker__remove col-md-4"><a title="Delete" class="delete">
                                                 <i class="icon-trash"></i> Delete</a></div>
@@ -128,7 +135,7 @@
                                     <div class="form-group"><label
                                                 class="col-md-4 control-label"><span>Redirect link</span></label>
                                         <input type="text" name="link" class="form-control marker__link isset-click"
-                                               value="{$marker.link}">
+                                               value="{$marker.link|escape:'htmlall':'UTF-8'}">
 
                                         <div class="marker__remove col-md-4"><a href="link" title="Delete"
                                                                                 class="delete">
@@ -137,7 +144,8 @@
                                 {elseif $marker.script}
                                     <div class="form-group"><label
                                                 class="col-md-4 control-label"><span>Script</span></label>
-                                        <textarea name="script" class="marker__script">{$marker.script}</textarea>
+                                        <textarea name="script"
+                                                  class="marker__script">{$marker.script|escape:'htmlall':'UTF-8'}</textarea>
 
                                         <div class="marker__remove col-md-4"><a title="Delete" class="delete">
                                                 <i class="icon-trash"></i> Delete</a></div>
@@ -162,27 +170,43 @@
                 {if $polylines }
                     {foreach from=$polylines item=polyline name=polyline}
                         <div class="panel"><h3></i>Polyline</h3>
-                        <form enctype="multipart/form-data" class="poly-save-form" method="post">
-                            <div class="form-group"><label class="col-md-4 control-label"><span>Name of the line</span></label>
-                                <input type="hidden" name="id_polyline" value="{$polyline.id_polyline}">
-                                <input type="hidden" name="coordinates" value="{$polyline.coordinates}">
-                                <input type="hidden" name="id_map" value="{$polyline.id_map}">
-                                <input type="text" name="name" class="form-control" value="{$polyline.name_polyline}"></div>
-                            <div class="form-group"><label class="col-md-4 control-label"><span>Thickness of the line</span></label>
-                                <input type="number" name="thick" class="form-control polyline__thick" value="{$polyline.thick}"></div>
-                            <div class="form-group"><label class="col-md-4 control-label"><span>Color</span></label>
-                                <select name="select" class="polyline__color">
-                                    <option value="#000000" {if $polyline.color == '#000000'}selected{/if}>Black</option>
-                                    <option value="#FF0000" {if $polyline.color == '#FF0000'}selected{/if}>Red</option>
-                                    <option value="#0000F0" {if $polyline.color == '#0000F0'}selected{/if}>Blue</option>
-                                    <option value="#008000" {if $polyline.color == '#008000'}selected{/if}>Green</option>
-                                    <option value="#808080" {if $polyline.color == '#808080'}selected{/if}>Gray</option>
+
+                            <form enctype="multipart/form-data" class="poly-save-form" method="post">
+                                <div class="form-group"><label
+                                            class="col-md-4 control-label"><span>Name of the line</span></label>
+                                    <input type="hidden" name="id_polyline"
+                                           value="{$polyline.id_polyline|escape:'htmlall':'UTF-8'}">
+                                    <input type="hidden" name="coordinates"
+                                           value="{$polyline.coordinates|escape:'htmlall':'UTF-8'}">
+                                    <input type="hidden" name="id_map"
+                                           value="{$polyline.id_map|escape:'htmlall':'UTF-8'}">
+                                    <input type="text" name="name" class="form-control"
+                                           value="{$polyline.name_polyline|escape:'htmlall':'UTF-8' }"></div>
+                                <div class="form-group"><label class="col-md-4 control-label"><span>Thickness of the line</span></label>
+                                    <input type="number" name="thick" class="form-control polyline__thick"
+                                           value="{$polyline.thick|escape:'htmlall':'UTF-8'}"></div>
+                                <div class="form-group"><label class="col-md-4 control-label"><span>Color</span></label>
+                                    <select name="select" class="polyline__color">
+                                        <option value="#000000" {if $polyline.color == '#000000'}selected{/if}>Black
+                                        </option>
+                                        <option value="#FF0000" {if $polyline.color == '#FF0000'}selected{/if}>Red
+                                        </option>
+                                        <option value="#0000F0" {if $polyline.color == '#0000F0'}selected{/if}>Blue
+                                        </option>
+                                        <option value="#008000" {if $polyline.color == '#008000'}selected{/if}>Green
+                                        </option>
+                                        <option value="#808080" {if $polyline.color == '#808080'}selected{/if}>Gray
+                                        </option>
                                     </select></div>
-                            <div class="panel-footer"><button type="submit" class="btn btn-default pull-right polyline__save"
-                                name=""><i class="process-icon-save"></i> Save</button>
-                                <a href="" class="btn btn-default polyline__remove"><i class="process-icon-cancel">
+                                <div class="panel-footer">
+                                    <button type="submit" class="btn btn-default pull-right polyline__save"
+                                            name=""><i class="process-icon-save"></i> Save
+                                    </button>
+                                    <a href="" class="btn btn-default polyline__remove"><i class="process-icon-cancel">
                                         </i> Cancel</a>
-                                </div></form></div>
+                                </div>
+                            </form>
+                        </div>
                     {/foreach}
                 {/if}
             </div>
@@ -191,13 +215,55 @@
                 <div class="panel">
                     <h3>Setting</h3>
 
-                    <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-9">
 
+                            <label class="control-label col-lg-3">
+                                <span>Position map</span>
+                            </label>
+
+                            <div class="col-lg-9">
+                                <div class="radio">
+                                    <input type="radio" name="render_map" id="render_map_1" value="1" checked="checked">
+                                    <label><span>All markers</span></label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="render_map" id="render_map_2" value="2">
+                                    <label> <span>Currently position map</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="panel-footer">
-                        <button type="submit" class="btn btn-default pull-right" name="">
-                            <i class="process-icon-save marker__save"></i> Save
-                        </button>
+
+                    <div class="row">
+                        <div class="col-lg-9">
+
+                            <label class="control-label col-lg-3">
+                                <span>Size map</span>
+                            </label>
+
+                            <div class="col-lg-9">
+                                <div class="size-input">
+                                    <label>
+                                    <input type="number" name="widht" id="widht" value="{$map->widht|escape:'htmlall':'UTF-8'}">
+                                    Widht</label>
+                                </div>
+                                <div class="size-input height-wrapper">
+                                    <label>
+                                    <input type="number" name="height" id="height" value="{$map->height|escape:'htmlall':'UTF-8'}" >
+                                     Height
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-default pull-right setting__save" name="" >
+                                <i class="process-icon-save setting__save"></i> Save
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
