@@ -57,6 +57,9 @@ class AdminPrestaGoogleMapsController extends ModuleAdminController
         if (!$id_map) {
             $map = new MapsAreas();
             $map->name = 'New Map';
+            $map->widht = 400;
+            $map->height = 300;
+            $map->position = 1;
             $map->add();
         } else {
             $map = new MapsAreas($id_map);
@@ -64,7 +67,16 @@ class AdminPrestaGoogleMapsController extends ModuleAdminController
             $polylines = $map->getAllPolylines();
             $icons = Markers::getAllDefaultIcon();
         }
-        Media::addJsDef(array('markers_set' => $markers));
+        if($map->position == 2 ){
+            Media::addJsDef(array(
+                'coord_set' => $map->coord,
+                'zoom_set' => $map->zoom
+            ));
+        }
+        Media::addJsDef(array(
+            'markers_set' => $markers,
+            'polylines_set' => $polylines
+        ));
 
         $this->context->smarty->assign(
             array(

@@ -99,7 +99,7 @@
     display: inline-block;
 }
 
-#widht,#height {
+#widht,#height,#zoom {
     border-radius: 5px;
     height: 27px;
 }

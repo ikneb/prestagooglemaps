@@ -15,6 +15,8 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "maps_areas` (
 `position` int(5) NOT NULL,
 `widht` int(5) NOT NULL,
 `height` int(5) NOT NULL,
+`coord` varchar(250) NOT NULL,
+`zoom` int(5) NOT NULL,
 PRIMARY KEY (`id_maps_areas`)
 )";
 

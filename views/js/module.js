@@ -17,15 +17,13 @@ function initMap() {
     });
 
     renderMarkers(map);
+    renderPoly(map);
     addListenerForAddMarkers();
-
-
 }
 
 function renderMarkers(map) {
     if (markers_set.length > 0) {
         jQuery.each(markers_set, function () {
-
             var coord = this.coordinates;
             var latlng = coord.split(',');
             var location = {lat: parseInt(latlng[0]), lng: parseInt(latlng[1])};
@@ -91,14 +89,43 @@ function renderMarkers(map) {
         });
 
         //set position map if isset markers
-        if (markers.length > 0) {
+        if (markers.length > 0 && typeof coord_set === 'undefined') {
             var latlngbounds = new google.maps.LatLngBounds();
             markers.forEach(function (latLng) {
                 latlngbounds.extend(latLng.getPosition());
             });
             map.setCenter(latlngbounds.getCenter());
             map.fitBounds(latlngbounds);
+        } else if (coord_set != undefined && zoom_set != undefined) {
+            var latLng = coord_set.split(',');
+            map.setCenter(new google.maps.LatLng(parseFloat(latLng[0]), parseFloat(latLng[1])));
+            map.setZoom(Number(zoom_set));
         }
+    }
+}
+
+/**
+ *  Render polylines on admin page
+ */
+function renderPoly(map) {
+    if (markers_set.length > 0) {
+        jQuery.each(polylines_set, function () {
+            var flightPlanCoordinates = '[' + this.coordinates + ']';
+            flightPlanCoordinates = flightPlanCoordinates.replace(new RegExp('lat', 'gm'), '"lat"');
+            flightPlanCoordinates = flightPlanCoordinates.replace(new RegExp('lng', 'gm'), '"lng"');
+            //flightPlanCoordinates = flightPlanCoordinates.replace(new RegExp('([0-9.]+)','gm'), '$1');
+            flightPlanCoordinates = JSON.parse(flightPlanCoordinates);
+
+            console.log(flightPlanCoordinates);
+            var poly = new google.maps.Polyline({
+                path: flightPlanCoordinates,
+                geodesic: true,
+                strokeColor: this.color,
+                strokeOpacity: 1.0,
+                strokeWeight: this.thick
+            });
+            poly.setMap(map);
+        });
     }
 }
 
@@ -712,6 +739,13 @@ $(document).ready(function () {
         var id_map = $(this).closest('.maps-template').attr('data-id');
         var height = $('input[name="height"]').val();
         var widht = $('input[name="widht"]').val();
+
+        if (position == 2) {
+            var center = map.getCenter();
+            var coord = center.lat() + ',' + center.lng();
+            var zoom = map.getZoom();
+        }
+
         $.ajax({
             type: 'POST',
             url: baseDir + 'modules/prestagooglemaps/ajax.php',
@@ -720,12 +754,26 @@ $(document).ready(function () {
                 position: position,
                 id_map: id_map,
                 height: height,
-                widht: widht
+                widht: widht,
+                coord: coord,
+                zoom: zoom
             },
             success: function (data) {
-                console.log(data);
+                if (data) {
+                    $('.alert-success').removeClass('no-display');
+                    setTimeout(function () {
+                        $('.alert-success').addClass('no-display');
+                    }, 2500);
+                } else {
+                    $('.alert-danger').removeClass('no-display');
+                    setTimeout(function () {
+                        $('.alert-danger').addClass('no-display');
+                    }, 2500);
+                }
             }
         });
 
     });
+
+
 });

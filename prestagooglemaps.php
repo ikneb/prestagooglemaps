@@ -35,8 +35,7 @@ class PrestaGoogleMaps extends Module
     public function install()
     {
         if (!parent::install()
-            /*|| !$this->registerHook('actionAdminControllerSetMedia')
-            || !Configuration::updateValue('PS_CRON_AUTORESTOCKING_METHOD', 1)*/
+            || !$this->registerHook('displayFooter')
         ) {
             return false;
         }
@@ -84,8 +83,6 @@ class PrestaGoogleMaps extends Module
 
         if (!parent::uninstall() ||
             !$this->deleteTab()
-            /*|| !Configuration::deleteByName('PS_CRON_AUTORESTOCKING_METHOD')
-            || !Configuration::deleteByName('PS_AUTOCRON_TIME')*/
         ) {
             return false;
         }
@@ -112,5 +109,9 @@ class PrestaGoogleMaps extends Module
                 return true;
             }
         }
+    }
+
+    public function hookDisplayFooter () {
+
     }
 }

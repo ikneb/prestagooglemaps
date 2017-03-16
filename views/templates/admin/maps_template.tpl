@@ -219,16 +219,15 @@
                         <div class="col-lg-9">
 
                             <label class="control-label col-lg-3">
-                                <span>Position map</span>
+                                <span>Center map</span>
                             </label>
-
                             <div class="col-lg-9">
                                 <div class="radio">
-                                    <input type="radio" name="render_map" id="render_map_1" value="1" checked="checked">
+                                    <input type="radio" name="render_map" id="render_map_1" value="1" {if $map->position == 1}checked{/if}>
                                     <label><span>All markers</span></label>
                                 </div>
                                 <div class="radio">
-                                    <input type="radio" name="render_map" id="render_map_2" value="2">
+                                    <input type="radio" name="render_map" id="render_map_2" value="2" {if $map->position == 2}checked{/if}>
                                     <label> <span>Currently position map</span>
                                     </label>
                                 </div>
@@ -258,6 +257,23 @@
                             </div>
                         </div>
                     </div>
+
+                    {*<div class="row">
+                        <div class="col-lg-9">
+
+                            <label class="control-label col-lg-3">
+                                <span>Zoom map</span>
+                            </label>
+
+                            <div class="col-lg-9">
+                                <div class="size-input">
+                                    <label>
+                                        <input type="number" name="zoom" id="zoom" value="*}{*{$map->widht|escape:'htmlall':'UTF-8'}*}{*">
+                                        </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*}
                     <div class="row">
                         <div class="panel-footer">
                             <button type="submit" class="btn btn-default pull-right setting__save" name="" >

@@ -16,6 +16,8 @@ class MapsAreas extends ObjectModel
     public $size;
     public $widht;
     public $height;
+    public $coord;
+    public $zoom;
 
 
     /**
@@ -30,7 +32,9 @@ class MapsAreas extends ObjectModel
             'name' => array('type' => self::TYPE_STRING),
             'position' => array('type' => self::TYPE_INT),
             'widht' => array('type' => self::TYPE_INT),
-            'height' => array('type' => self::TYPE_INT)
+            'height' => array('type' => self::TYPE_INT),
+            'coord' => array('type' => self::TYPE_STRING),
+            'zoom' => array('type' => self::TYPE_INT)
         ),
     );
 
