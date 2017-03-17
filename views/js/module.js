@@ -524,7 +524,7 @@ $(document).ready(function () {
         formData.append('ajax', 'save_marker');
         $.ajax({
             type: 'POST',
-            url: baseDir + 'modules/prestagooglemaps/ajax.php',
+            url:'/modules/prestagooglemaps/ajax.php',
             data: formData,
             async: false,
             success: function (data) {
@@ -580,7 +580,7 @@ $(document).ready(function () {
         var id_map = _this.closest('.maps-template').attr('data-id');
         jQuery.ajax({
             type: 'POST',
-            url: baseDir + 'modules/prestagooglemaps/ajax.php',
+            url: '/modules/prestagooglemaps/ajax.php',
             data: {
                 ajax: 'remove_marker',
                 id_marker: id_marker,
@@ -663,7 +663,7 @@ $(document).ready(function () {
         formData.append('ajax', 'save_poly');
         $.ajax({
             type: 'POST',
-            url: baseDir + 'modules/prestagooglemaps/ajax.php',
+            url: '/modules/prestagooglemaps/ajax.php',
             data: formData,
             async: false,
             success: function (data) {
@@ -701,7 +701,7 @@ $(document).ready(function () {
         jQuery(this).closest('.panel').remove();
         $.ajax({
             type: 'POST',
-            url: baseDir + 'modules/prestagooglemaps/ajax.php',
+            url: '/modules/prestagooglemaps/ajax.php',
             data: {
                 ajax: 'remove_poly',
                 id_polyline: id_polyline
@@ -732,7 +732,6 @@ $(document).ready(function () {
         markers[id].setIcon();
     });
 
-
     //setting
     $('body').on('click', '.setting__save', function () {
         var position = $('input[name="render_map"]:checked').val();
@@ -754,7 +753,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'POST',
-            url: baseDir + 'modules/prestagooglemaps/ajax.php',
+            url:  '/modules/prestagooglemaps/ajax.php',
             data: {
                 ajax: 'save_setting',
                 position: position,
@@ -785,11 +784,11 @@ $(document).ready(function () {
     });
 
 
-    $('body').on('click', 'input[name="size"]', function(){
+    $('body').on('click', 'input[name="size"]', function () {
 
         var size = $('input[name="size"]:checked').val();
 
-        if(size == 1){
+        if (size == 1) {
             $('.setting-size').removeClass('no-display');
         } else {
             $('.setting-size').addClass('no-display');
