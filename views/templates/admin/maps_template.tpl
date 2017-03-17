@@ -215,68 +215,112 @@
                 <div class="panel">
                     <h3>Setting</h3>
 
-                    <div class="row">
+                    <div class="row setting-items">
                         <div class="col-lg-9">
-
                             <label class="control-label col-lg-3">
-                                <span>Center map</span>
+                                <span title="" data-toggle="tooltip"
+                                      class="label-tooltip" data-original-title="Info"
+                                      data-html="true">Center map</span>
                             </label>
+
                             <div class="col-lg-9">
                                 <div class="radio">
-                                    <input type="radio" name="render_map" id="render_map_1" value="1" {if $map->position == 1}checked{/if}>
+                                    <input type="radio" name="render_map" id="render_map_1" value="1"
+                                           {if $map->position == 1}checked{/if}>
                                     <label><span>All markers</span></label>
                                 </div>
                                 <div class="radio">
-                                    <input type="radio" name="render_map" id="render_map_2" value="2" {if $map->position == 2}checked{/if}>
+                                    <input type="radio" name="render_map" id="render_map_2" value="2"
+                                           {if $map->position == 2}checked{/if}>
                                     <label> <span>Currently position map</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
+                    <div class="row setting-items">
                         <div class="col-lg-9">
-
                             <label class="control-label col-lg-3">
-                                <span>Size map</span>
+                                <span title="" data-toggle="tooltip"
+                                      class="label-tooltip" data-original-title="Info"
+                                      data-html="true">Size</span>
+                            </label>
+
+                            <div class="col-lg-9 ">
+                                <div class="radio">
+                                    <input type="radio" name="size" id="render_map_1" value="0"
+                                           {if $map->size == 0}checked{/if}>
+                                    <label><span>Default size</span></label>
+                                </div>
+                                <div class="radio">
+                                    <input type="radio" name="size" id="render_map_2" value="1"
+                                           {if $map->size == 1}checked{/if}>
+                                    <label> <span>Resize</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row setting-items setting-zoom no-display">
+                        <div class="col-lg-9">
+                            <label class="control-label col-lg-3">
+                                <span title="" data-toggle="tooltip"
+                                      class="label-tooltip" data-original-title="Info"
+                                      data-html="true">Zoom map</span>
                             </label>
 
                             <div class="col-lg-9">
                                 <div class="size-input">
                                     <label>
-                                    <input type="number" name="widht" id="widht" value="{$map->widht|escape:'htmlall':'UTF-8'}">
-                                    Widht</label>
-                                </div>
-                                <div class="size-input height-wrapper">
-                                    <label>
-                                    <input type="number" name="height" id="height" value="{$map->height|escape:'htmlall':'UTF-8'}" >
-                                     Height
+                                        <input type="number" name="zoom" id="zoom" value="">
                                     </label>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {*<div class="row">
+                    <div class="row setting-items setting-size no-display">
                         <div class="col-lg-9">
-
                             <label class="control-label col-lg-3">
-                                <span>Zoom map</span>
+
                             </label>
 
                             <div class="col-lg-9">
                                 <div class="size-input">
                                     <label>
-                                        <input type="number" name="zoom" id="zoom" value="*}{*{$map->widht|escape:'htmlall':'UTF-8'}*}{*">
-                                        </label>
+                                        <input type="number" name="widht" id="widht"
+                                               value="{if $map->widht != 0}{$map->widht|escape:'htmlall':'UTF-8'}{/if}">Widht</label>
+                                </div>
+                                <div class="size-input height-wrapper">
+                                    <label>
+                                        <input type="number" name="height" id="height"
+                                               value="{if $map->height != 0}{$map->height|escape:'htmlall':'UTF-8'}{/if}"> Height</label>
                                 </div>
                             </div>
                         </div>
-                    </div>*}
+                    </div>
+                    <div class="row setting-items">
+                        <div class="col-lg-9">
+                            <label class="control-label col-lg-3">
+                            <span title="" data-toggle="tooltip" class="label-tooltip"
+                                  data-original-title="Info" data-html="true">Render map</span>
+                            </label>
+
+                            <div class="size-input">
+                                <select class="form-control fixed-width-xxl place-map">
+                                    <option value="99999">Select</option>
+                                    <option value="0" {if $map->place_map == 0}selected{/if}>Footer</option>
+                                    {foreach from=$cms item=page}
+                                        <option value="{$page.id_cms|escape:'htmlall':'UTF-8'}" {if $map->place_map == $page.id_cms}selected{/if}>{$page.meta_title|escape:'htmlall':'UTF-8'}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="panel-footer">
-                            <button type="submit" class="btn btn-default pull-right setting__save" name="" >
+                            <button type="submit" class="btn btn-default pull-right setting__save" name="">
                                 <i class="process-icon-save setting__save"></i> Save
                             </button>
                         </div>

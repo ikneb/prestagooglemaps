@@ -33,4 +33,15 @@ class Polylines extends ObjectModel
             'color' => array('type' => self::TYPE_STRING),
         ),
     );
+
+    public static function getAllPoliesIdMaps($id_map) {
+        $sql = "SELECT * FROM " . _DB_PREFIX_ . "polylines WHERE id_map=". $id_map;
+
+        $maps = Db::getInstance()->executeS($sql);
+
+        if ($maps) {
+            return $maps;
+        }
+        return false;
+    }
 }

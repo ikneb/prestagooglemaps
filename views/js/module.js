@@ -739,11 +739,17 @@ $(document).ready(function () {
         var id_map = $(this).closest('.maps-template').attr('data-id');
         var height = $('input[name="height"]').val();
         var widht = $('input[name="widht"]').val();
+        var place_map = $('.place-map').val();
+        var size = $('input[name="size"]:checked').val();
 
         if (position == 2) {
             var center = map.getCenter();
             var coord = center.lat() + ',' + center.lng();
             var zoom = map.getZoom();
+        }
+        if (size == 0) {
+            height = 0;
+            widht = 0;
         }
 
         $.ajax({
@@ -756,9 +762,12 @@ $(document).ready(function () {
                 height: height,
                 widht: widht,
                 coord: coord,
-                zoom: zoom
+                zoom: zoom,
+                place_map: place_map,
+                size: size
             },
             success: function (data) {
+                console.log(data);
                 if (data) {
                     $('.alert-success').removeClass('no-display');
                     setTimeout(function () {
@@ -775,5 +784,17 @@ $(document).ready(function () {
 
     });
 
+
+    $('body').on('click', 'input[name="size"]', function(){
+
+        var size = $('input[name="size"]:checked').val();
+
+        if(size == 1){
+            $('.setting-size').removeClass('no-display');
+        } else {
+            $('.setting-size').addClass('no-display');
+        }
+
+    });
 
 });

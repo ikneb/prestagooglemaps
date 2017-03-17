@@ -127,6 +127,8 @@ switch (Tools::getValue('ajax')) {
             $map->height = Tools::getValue('height');
             $map->coord = Tools::getValue('coord') ? Tools::getValue('coord'): '';
             $map->zoom = Tools::getValue('zoom') ? Tools::getValue('zoom') : 0;
+            $map->place_map = (int)Tools::getValue('place_map');
+            $map->size = (int)Tools::getValue('size');
             if($map->update()){
                 echo true;
             }

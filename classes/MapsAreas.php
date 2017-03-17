@@ -18,6 +18,7 @@ class MapsAreas extends ObjectModel
     public $height;
     public $coord;
     public $zoom;
+    public $place_map;
 
 
     /**
@@ -31,10 +32,12 @@ class MapsAreas extends ObjectModel
             'id_maps_areas' => array('type' => self::TYPE_INT),
             'name' => array('type' => self::TYPE_STRING),
             'position' => array('type' => self::TYPE_INT),
+            'size' => array('type' => self::TYPE_INT),
             'widht' => array('type' => self::TYPE_INT),
             'height' => array('type' => self::TYPE_INT),
             'coord' => array('type' => self::TYPE_STRING),
-            'zoom' => array('type' => self::TYPE_INT)
+            'zoom' => array('type' => self::TYPE_INT),
+            'place_map' => array('type' => self::TYPE_INT)
         ),
     );
 
@@ -63,4 +66,12 @@ class MapsAreas extends ObjectModel
         return false;
     }
 
+    public static function getAllMap($plase_map) {
+        $sql = "SELECT * FROM " . _DB_PREFIX_ . "maps_areas WHERE place_map=". $plase_map;
+        $maps = Db::getInstance()->executeS($sql);
+        if ($maps) {
+            return $maps;
+        }
+        return false;
+    }
 }

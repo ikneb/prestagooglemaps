@@ -13,10 +13,12 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "maps_areas` (
 `id_maps_areas` int(11) NOT NULL AUTO_INCREMENT,
 `name` varchar(100) NOT NULL,
 `position` int(5) NOT NULL,
+`size` int(5) NOT NULL,
 `widht` int(5) NOT NULL,
 `height` int(5) NOT NULL,
 `coord` varchar(250) NOT NULL,
 `zoom` int(5) NOT NULL,
+`place_map` int(5) NOT NULL,
 PRIMARY KEY (`id_maps_areas`)
 )";
 
@@ -42,5 +44,5 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "polylines` (
 `coordinates` text NOT NULL,
 `thick` int(5) NOT NULL,
 `color` varchar(50) NOT NULL,
-PRIMARY KEY (`id_polylines`)
+PRIMARY KEY (`id_polyline`)
 )";

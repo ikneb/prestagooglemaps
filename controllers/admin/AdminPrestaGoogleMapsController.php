@@ -78,12 +78,15 @@ class AdminPrestaGoogleMapsController extends ModuleAdminController
             'polylines_set' => $polylines
         ));
 
+        $cms = CMS::listCms();
+
         $this->context->smarty->assign(
             array(
                 'icons' => $icons,
                 'map' => $map,
                 'polylines' => $polylines,
                 'markers_set' => $markers,
+                'cms' => $cms
             )
         );
         parent::renderForm();

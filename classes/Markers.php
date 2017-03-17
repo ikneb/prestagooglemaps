@@ -60,4 +60,15 @@ class Markers extends ObjectModel
         return $all_ikon;
     }
 
+    public static function getAllMarkersIdMaps($id_map) {
+        $sql = "SELECT * FROM " . _DB_PREFIX_ . "markers WHERE id_map=". $id_map;
+
+        $maps = Db::getInstance()->executeS($sql);
+
+        if ($maps) {
+            return $maps;
+        }
+        return false;
+    }
+
 }
